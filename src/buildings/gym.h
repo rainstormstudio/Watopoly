@@ -4,7 +4,11 @@
 #include "../building.h"
 
 class Gym : public Building {
-
+public:
+    // Usage fees are calculated by rolling two dice
+    unsigned int getUsageFee() const;
+    
+    void notify(std::shared_ptr<Player> player) override;
 };
 
 #endif

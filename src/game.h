@@ -5,22 +5,40 @@
 
 class Graphics;
 class InputManager;
+class Square;
+class Building;
 class Player;
 
 class Game {
     GameState state;
     Graphics gfx;
     InputManager events;
+    std::vector<std::shared_ptr<Square>> squares;
     std::vector<std::shared_ptr<Player>> players;
     unsigned int currentPlayer;
+
+    void nextTurn();
+    void buy(std::shared_ptr<Building> building);
+    void auction(std::shared_ptr<Building> building);
+    void trade();
+
+    void saveGame();
+    void loadGame();
 public:
     Game();
 
     bool loop() const;
+
+    // initialization
     void init();
 
+    // deal with user inputs
     void processInput();
+
+    // update game logic
     void update();
+
+    // render the board
     void render();
 };
 

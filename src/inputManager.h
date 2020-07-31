@@ -9,6 +9,7 @@ class InputManager {
     std::vector<std::string> args;
     
 public:
+    // read a line of commands: command <args ... >
     void readLine();
 
     std::string getCommand() const;

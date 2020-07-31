@@ -1,0 +1,8 @@
+#include "./nonProperties/collectOSAP.h"
+#include "./nonProperties/coopFee.h"
+#include "./nonProperties/DCtims.h"
+#include "./nonProperties/gooseNesting.h"
+#include "./nonProperties/goToTims.h"
+#include "./nonProperties/needlesHall.h"
+#include "./nonProperties/slc.h"
+#include "./nonProperties/tuition.h"
