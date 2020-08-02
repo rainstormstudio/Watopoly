@@ -7,12 +7,14 @@
 
 class Graphics {
     std::vector<std::vector<char>> theDisplay;
-
-public:
     int screenWidth;
     int screenHeight;
 
+public:
     Graphics(int width, int height);
+
+    int getWidth() const;
+    int getHeight() const;
 
     void clear();
     void render();
