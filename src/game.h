@@ -17,7 +17,9 @@ class Game {
     std::vector<std::shared_ptr<Player>> players;
     unsigned int currentPlayer;
 
+    // changes currentPlayer to the next
     void nextTurn();
+    
     void buy(std::shared_ptr<Building> building);
     void auction(std::shared_ptr<Building> building);
     void trade();

@@ -11,6 +11,8 @@ public:
     unsigned int getRent() const;
 
     void notify(std::shared_ptr<Player> player) override;
+
+    void render(Graphics & gfx) override;
 };
 
 #endif
