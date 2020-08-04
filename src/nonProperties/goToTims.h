@@ -7,7 +7,7 @@ class GoToTims : public NonProperty {
 public:
     GoToTims(unsigned int pos, std::string name);
 
-    void notify(std::shared_ptr<Player> player) override;
+    void update(std::shared_ptr<Player> player) override;
 
     void render(Graphics & gfx) override;
 };
