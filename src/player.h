@@ -12,6 +12,11 @@ class Player {
     unsigned int position;
     int balance;
 
+    unsigned int numResi;
+    unsigned int numGyms;
+
+    bool isBankrupt;
+    
 public:
     Player(std::string name, char symbol);
 
