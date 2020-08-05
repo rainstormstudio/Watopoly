@@ -11,8 +11,8 @@ class Player;
 
 class Game {
     GameState state;
-    Graphics gfx;
-    InputManager events;
+    std::shared_ptr<Graphics> gfx;
+    std::shared_ptr<InputManager> events;
     std::vector<std::shared_ptr<Square>> squares;
     std::vector<std::shared_ptr<Player>> players;
     unsigned int currentPlayer;
