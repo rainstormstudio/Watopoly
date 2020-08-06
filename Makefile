@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-std=c++14 -Wall -O -g -MMD -Werror=vla
-SOURCES=${wildcard ./src/*.cc}
+SOURCES=${wildcard ./src/*.cc ./src/buildings/*.cc ./src/nonProperties/*.cc}
 OBJECTS=${SOURCES:.cc=.o}
 DEPENDS=${OBJECTS:.o=.d}
 EXEC=watopoly
