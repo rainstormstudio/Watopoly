@@ -5,7 +5,7 @@
 
 class GoToTims : public NonProperty {
 public:
-    GoToTims(unsigned int pos, std::string name);
+    GoToTims(Vec2 coord, std::string name);
 
     void update(std::shared_ptr<Player> player) override;
 

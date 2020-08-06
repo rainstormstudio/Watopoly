@@ -5,6 +5,8 @@
 
 class Gym : public Building {
 public:
+    Gym(Vec2 coord, std::string name, unsigned int cost);
+    
     // Usage fees are calculated by rolling two dice
     unsigned int getUsageFee() const;
     

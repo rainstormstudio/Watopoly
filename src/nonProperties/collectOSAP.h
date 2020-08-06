@@ -5,7 +5,7 @@
 
 class CollectOSAP : public NonProperty {
 public:
-    CollectOSAP(unsigned int pos, std::string name);
+    CollectOSAP(Vec2 coord, std::string name);
 
     void update(std::shared_ptr<Player> player) override;
 

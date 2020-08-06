@@ -12,7 +12,7 @@ protected:
     std::vector<std::shared_ptr<Player>> players;
     std::string name;
 public:
-    Square(unsigned int pos, std::string name);
+    Square(Vec2 coord, std::string name);
 
     unsigned int getPosition() const;
     std::string getName() const;
@@ -22,6 +22,6 @@ public:
     virtual void update(std::shared_ptr<Player> player) = 0;
 
     virtual void render(std::shared_ptr<Graphics> gfx) = 0;
-}
+};
 
 #endif

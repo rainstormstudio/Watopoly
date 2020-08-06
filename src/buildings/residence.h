@@ -5,7 +5,7 @@
 
 class Residence : public Building {
 public:
-    Residence(unsigned int pos, std::string name, unsigned int cost);
+    Residence(Vec2 coord, std::string name, unsigned int cost);
 
     // Rent is calculated based on the number of residences a player owns
     unsigned int getRent() const;

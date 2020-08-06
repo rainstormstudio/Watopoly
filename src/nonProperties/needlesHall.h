@@ -5,7 +5,7 @@
 
 class NeedlesHall : public NonProperty {
 public:
-    NeedlesHall(unsigned int pos, std::string name);
+    NeedlesHall(Vec2 coord, std::string name);
 
     void update(std::shared_ptr<Player> player) override;
 
