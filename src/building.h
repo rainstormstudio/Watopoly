@@ -18,7 +18,7 @@ public:
 
     void update(std::shared_ptr<Player> player) override;
 
-    void render(Graphics & gfx) override;
+    void render(std::shared_ptr<Graphics> gfx) override;
 };
 
 #endif

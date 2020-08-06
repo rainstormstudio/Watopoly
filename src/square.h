@@ -9,7 +9,7 @@ class Player;
 class Square {
 protected:
     Vec2 coordinate;    // defines the coordinate of the square on the gameboard
-    std::vector<shared_ptr<Player>> players;
+    std::vector<std::shared_ptr<Player>> players;
     std::string name;
 public:
     Square(unsigned int pos, std::string name);
@@ -21,7 +21,7 @@ public:
 
     virtual void update(std::shared_ptr<Player> player) = 0;
 
-    virtual void render(Graphics & gfx) = 0;
+    virtual void render(std::shared_ptr<Graphics> gfx) = 0;
 }
 
 #endif
