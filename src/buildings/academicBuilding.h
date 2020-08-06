@@ -4,16 +4,18 @@
 #include "../building.h"
 
 class Academics : public Building {
+    std::string block;
     unsigned int improvementCost;
     unsigned int tuitions[6];
     unsigned int improvement;
 public:
     Academics(Vec2 coord, std::string name, unsigned int cost,
-              unsigned int improvementCost, 
+              std::string block, unsigned int improvementCost, 
               unsigned int tuition_0, unsigned int tuition_1, 
               unsigned int tuition_2, unsigned int tuition_3,
               unsigned int tuition_4, unsigned int tuition_5);
     
+    std::string getBlock() const;
     unsigned int getTuition(unsigned int index) const;
     unsigned int getImprovementCost() const;
 
