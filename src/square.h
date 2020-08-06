@@ -14,7 +14,6 @@ protected:
 public:
     Square(Vec2 coord, std::string name);
 
-    unsigned int getPosition() const;
     std::string getName() const;
 
     void setCoordinate(int x, int y);
