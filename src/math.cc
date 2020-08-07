@@ -20,3 +20,15 @@ unsigned int Math::rollTwoDice() {
     return rollDice() + rollDice();
 }
 
+bool isNat(std::string str) {
+    int len = str.length();
+    if (len == 0) {
+        return false;
+    }
+    for (int i = 0; i < len; ++i) {
+        if (!(str[i] >= '0' && str[i] <= '9')) {
+            return false;
+        }
+    }
+    return true;
+}

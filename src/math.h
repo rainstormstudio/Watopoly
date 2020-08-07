@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <string>
 
 namespace Math {
     // set random seed (call this at initialization of game once)
@@ -16,6 +17,9 @@ namespace Math {
 
     // roll two six-sided dice and get the sum
     unsigned int rollTwoDice();
+
+    // checks if a string is a natural number
+    bool isNat(std::string str);
 }
 
 #endif
