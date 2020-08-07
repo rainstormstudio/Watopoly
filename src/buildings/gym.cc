@@ -20,7 +20,7 @@ unsigned int Gym::getUsageFee() const {
     }
 }
 
-void Gym::update(std::shared_ptr<Player> player) {}
+void Gym::update(std::vector<std::shared_ptr<Player>> players) {}
 
 void Gym::render(std::shared_ptr<Graphics> gfx) {
     int len = name.length();

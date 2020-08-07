@@ -10,7 +10,7 @@ public:
     // Usage fees are calculated by rolling two dice
     unsigned int getUsageFee() const;
     
-    void update(std::shared_ptr<Player> player) override;
+    void update(std::vector<std::shared_ptr<Player>> players) override;
 
     void render(std::shared_ptr<Graphics> gfx) override;
 };

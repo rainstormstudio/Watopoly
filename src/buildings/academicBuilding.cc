@@ -22,7 +22,7 @@ unsigned int Academics::getImprovementCost() const { return improvementCost; }
 
 unsigned int Academics::getImprovement() const { return improvement; }
 
-void Academics::update(std::shared_ptr<Player> player) {
+void Academics::update(std::vector<std::shared_ptr<Player>> players) {
 
 }
 

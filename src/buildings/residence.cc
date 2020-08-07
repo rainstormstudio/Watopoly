@@ -20,7 +20,7 @@ unsigned int Residence::getRent() const {
     }
 }
 
-void Residence::update(std::shared_ptr<Player> player) {}
+void Residence::update(std::vector<std::shared_ptr<Player>> players) {}
 
 void Residence::render(std::shared_ptr<Graphics> gfx) {
     int len = name.length();

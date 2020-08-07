@@ -10,7 +10,7 @@ public:
     // Rent is calculated based on the number of residences a player owns
     unsigned int getRent() const;
 
-    void update(std::shared_ptr<Player> player) override;
+    void update(std::vector<std::shared_ptr<Player>> players) override;
 
     void render(std::shared_ptr<Graphics> gfx) override;
 };
