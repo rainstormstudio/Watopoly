@@ -27,4 +27,7 @@ void Residence::render(std::shared_ptr<Graphics> gfx) {
     for (int i = 0; i < len; ++i) {
         gfx->draw(name[i], coordinate.x + i, coordinate.y);
     }
+    for (unsigned int i = 0; i < players.size(); ++i) {
+        gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
+    }
 }

@@ -23,6 +23,7 @@ void Game::init() {
     gfx = std::make_shared<Graphics>(101, 56);
     events = std::make_shared<InputManager>();
 
+    squares.emplace_back(std::make_shared<CollectOSAP>(0, Vec2(91, 51), "COLLECT OSAP"));
     squares.emplace_back(std::make_shared<Academics>(1, Vec2(82, 51), "AL", 40, "Arts1",    50,  2, 10, 30, 90, 160, 250));
     squares.emplace_back(std::make_shared<Academics>(3, Vec2(64, 51), "ML", 60, "Arts1",    50,  4, 20, 60, 180, 320, 450));
     squares.emplace_back(std::make_shared<Residence>(5, Vec2(46, 51), "MKV", 200));
@@ -204,10 +205,16 @@ void Game::update() {
             break;
         }
         case PRE_GAME: {
+            for (auto& square : squares) {
+                square->update(players);
+            }
             state = IN_GAME;
             break;
         }
         case IN_GAME: {
+            for (auto& square : squares) {
+                square->update(players);
+            }
             break;
         }
         case WON_GAME: {

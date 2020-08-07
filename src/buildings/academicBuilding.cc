@@ -27,14 +27,9 @@ void Academics::update(std::vector<std::shared_ptr<Player>> players) {
 }
 
 void Academics::render(std::shared_ptr<Graphics> gfx) {
-    for (int i = 0; i < 8; ++i) {
-        gfx->draw('-', coordinate.x + i, coordinate.y + 1);
-    }
-    int len = name.length();
-    for (int i = 0; i < len; ++i) {
-        gfx->draw(name[i], coordinate.x + i, coordinate.y + 2);
-    }
+    gfx->write("--------", coordinate.x, coordinate.y + 1, 8);
+    gfx->write(name, coordinate.x, coordinate.y + 2, 8);
     for (unsigned int i = 0; i < players.size(); ++i) {
-        gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 4);
+        gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
     }
 }

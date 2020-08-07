@@ -52,7 +52,9 @@ void Graphics::render(unsigned int height) {
 }
 
 void Graphics::draw(char value, int x, int y) {
-    theDisplay[y][x] = value;
+    if (x >= 0 && x < screenWidth && y >= 0 && y < screenHeight) {
+        theDisplay[y][x] = value;
+    }
 }
 
 void Graphics::drawImage(std::string filename) {
@@ -71,8 +73,17 @@ void Graphics::drawImage(std::string filename) {
     }
 }
 
-void Graphics::write(std::string content, int x, int y) {
-
+void Graphics::write(std::string content, int x, int y, int width) {
+    int len = content.length();
+    int j = 0;
+    for (int i = 0; i < len; ++i) {
+        theDisplay[y][x + j] = content[i];
+        ++j;
+        if (j == screenWidth || j == width) {
+            ++ y;
+            j = 0;
+        }
+    }
 }
 
 void Graphics::addMsg(std::string str) {
