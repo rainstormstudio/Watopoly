@@ -11,14 +11,15 @@ protected:
     Vec2 coordinate;    // defines the coordinate of the square on the gameboard
     std::vector<std::shared_ptr<Player>> players;
     std::string name;
+	int square_pos;
 public:
-    Square(Vec2 coord, std::string name);
+    Square(int square_pos, Vec2 coord, std::string name);
 
     std::string getName() const;
 
     void setCoordinate(int x, int y);
 
-    virtual void update(std::shared_ptr<Player> player) = 0;
+    virtual void update(std::vector<std::shared_ptr<Player>> players) = 0;
 
     virtual void render(std::shared_ptr<Graphics> gfx) = 0;
 };

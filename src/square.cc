@@ -1,7 +1,7 @@
 #include "square.h"
 
-Square::Square(Vec2 coord, std::string name)
-    : coordinate{coord}, name{name} {
+Square::Square(int square_pos, Vec2 coord, std::string name)
+	: square_pos{ square_pos }, coordinate { coord }, name{ name } {
     
 }
 
