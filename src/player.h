@@ -27,9 +27,6 @@ public:
     unsigned int getPosition() const;
     unsigned int getGymNum() const;
     unsigned int getResiNum() const;
-    
-
-    void render(Graphics & gfx);
 };
 
 #endif

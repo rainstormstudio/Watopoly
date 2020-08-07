@@ -27,9 +27,3 @@ unsigned int Player::getResiNum() const {
     return numResi;
 }
 
-void Player::render(Graphics & gfx) {
-    // show player on the graph
-    return;
-}
-
-
