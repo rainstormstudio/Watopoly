@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player(std::string name, char symbol)
-    : name{name}, symbol{symbol} {}
+	: name{ name }, symbol{ symbol }, position{ 0 } {}
 
 std::string Player::getName() const {
     return name;
@@ -24,6 +24,5 @@ unsigned int Player::getGymNum() const {
 }
 
 unsigned int Player::getResiNum() const {
-    return numResi;
+	return numResi;
 }
-
