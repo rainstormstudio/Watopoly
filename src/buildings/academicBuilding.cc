@@ -1,11 +1,11 @@
 #include "academicBuilding.h"
 
-Academics::Academics(Vec2 coord, std::string name, unsigned int cost,
+Academics::Academics(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost,
                      std::string block, unsigned int improvementCost, 
                      unsigned int tuition_0, unsigned int tuition_1, 
                      unsigned int tuition_2, unsigned int tuition_3,
                      unsigned int tuition_4, unsigned int tuition_5)
-    : Building(coord, name, cost), block{block}, improvementCost{improvementCost} {
+    : Building(square_pos, coord, name, cost), block{block}, improvementCost{improvementCost} {
     tuitions[0] = tuition_0;
     tuitions[1] = tuition_1;
     tuitions[2] = tuition_2;

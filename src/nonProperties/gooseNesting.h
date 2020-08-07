@@ -5,7 +5,7 @@
 
 class GooseNesting : public NonProperty {
 public:
-    GooseNesting(Vec2 coord, std::string name);
+    GooseNesting(unsigned int square_pos, Vec2 coord, std::string name);
 
     void update(std::vector<std::shared_ptr<Player>> players) override;
 

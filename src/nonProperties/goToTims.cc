@@ -1,13 +1,14 @@
 #include "goToTims.h"
 
-GoToTims::GoToTims(Vec2 coord, std::string name) : NonProperty(coord, name) {}
+GoToTims::GoToTims(unsigned int square_pos, Vec2 coord, std::string name) 
+	: NonProperty(square_pos, coord, name) {}
 
 void GoToTims::update(std::vector<std::shared_ptr<Player>> players) {
-	for (int i = 0; i < this->players.size(); i++) {
+	for (unsigned int i = 0; i < this->players.size(); i++) {
 		this->players[i] = nullptr;
 	}
 
-	for (int i = 0; i < players.size(); i++) {
+	for (unsigned int i = 0; i < players.size(); i++) {
 		if (players[i]->getPosition() == this->square_pos) {
 			players[i]->setPosition(10);
 		}

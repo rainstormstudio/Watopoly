@@ -1,7 +1,7 @@
 #include "residence.h"
 
-Residence::Residence(Vec2 coord, std::string name, unsigned int cost)
-    : Building(coord, name, cost) {
+Residence::Residence(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost)
+    : Building(square_pos, coord, name, cost) {
         owner = nullptr;
 }
 

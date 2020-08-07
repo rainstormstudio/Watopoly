@@ -1,7 +1,7 @@
 #include "nonProperty.h"
 
-NonProperty::NonProperty(Vec2 coord, std::string name)
-    : Square(coord, name) {
+NonProperty::NonProperty(unsigned int square_pos, Vec2 coord, std::string name)
+    : Square(square_pos, coord, name) {
 
 }
 

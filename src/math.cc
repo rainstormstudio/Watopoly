@@ -20,7 +20,7 @@ unsigned int Math::rollTwoDice() {
     return rollDice() + rollDice();
 }
 
-bool isNat(std::string str) {
+bool Math::isNat(std::string str) {
     int len = str.length();
     if (len == 0) {
         return false;

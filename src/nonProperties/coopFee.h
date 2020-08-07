@@ -5,7 +5,7 @@
 
 class CoopFee : public NonProperty {
 public:
-    CoopFee(Vec2 coord, std::string name);
+    CoopFee(unsigned int square_pos, Vec2 coord, std::string name);
 
     void update(std::vector<std::shared_ptr<Player>> players) override;
 

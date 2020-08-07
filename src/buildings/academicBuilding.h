@@ -9,7 +9,7 @@ class Academics : public Building {
     unsigned int tuitions[6];
     unsigned int improvement;
 public:
-    Academics(Vec2 coord, std::string name, unsigned int cost,
+    Academics(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost,
               std::string block, unsigned int improvementCost, 
               unsigned int tuition_0, unsigned int tuition_1, 
               unsigned int tuition_2, unsigned int tuition_3,

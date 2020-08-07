@@ -6,7 +6,7 @@
 
 class NonProperty : public Square {
 public:
-    NonProperty(Vec2 coord, std::string name);
+    NonProperty(unsigned int square_pos, Vec2 coord, std::string name);
     
     void update(std::vector<std::shared_ptr<Player>> players) override;
 

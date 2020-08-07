@@ -5,7 +5,7 @@
 
 class SLC : public NonProperty {
 public:
-    SLC(Vec2 coord, std::string name);
+    SLC(unsigned int square_pos, Vec2 coord, std::string name);
 
     void update(std::vector<std::shared_ptr<Player>> players) override;
 

@@ -1,8 +1,8 @@
 #include "gym.h"
 
 
-Gym::Gym(Vec2 coord, std::string name, unsigned int cost)
-    : Building(coord, name, cost) {
+Gym::Gym(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost)
+    : Building(square_pos, coord, name, cost) {
         owner = nullptr;
 }
 

@@ -5,7 +5,7 @@
 
 class DCtims : public NonProperty {
 public:
-    DCtims(Vec2 coord, std::string name);
+    DCtims(unsigned int square_pos, Vec2 coord, std::string name);
 
     void update(std::vector<std::shared_ptr<Player>> players) override;
 

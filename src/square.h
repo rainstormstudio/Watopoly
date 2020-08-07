@@ -3,17 +3,16 @@
 
 #include "types.h"
 #include "graphics.h"
-
-class Player;
+#include "player.h"
 
 class Square {
 protected:
+	unsigned int square_pos;
     Vec2 coordinate;    // defines the coordinate of the square on the gameboard
     std::vector<std::shared_ptr<Player>> players;
     std::string name;
-	int square_pos;
 public:
-    Square(int square_pos, Vec2 coord, std::string name);
+    Square(unsigned int square_pos, Vec2 coord, std::string name);
 
     std::string getName() const;
 

@@ -1,6 +1,6 @@
 #include "square.h"
 
-Square::Square(int square_pos, Vec2 coord, std::string name)
+Square::Square(unsigned int square_pos, Vec2 coord, std::string name)
 	: square_pos{ square_pos }, coordinate { coord }, name{ name } {
     
 }

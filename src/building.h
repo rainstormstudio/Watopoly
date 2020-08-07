@@ -11,7 +11,7 @@ protected:
     unsigned int cost;
     std::shared_ptr<Player> owner;
 public:
-    Building(Vec2 coord, std::string name, unsigned int cost);
+    Building(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost);
 
     std::shared_ptr<Player> getOwner() const;
     void setOwner(std::shared_ptr<Player> player);

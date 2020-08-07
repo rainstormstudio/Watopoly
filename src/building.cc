@@ -1,7 +1,7 @@
 #include "building.h"
 
-Building::Building(Vec2 coord, std::string name, unsigned int cost) 
-    : Square(coord, name), cost{cost} {
+Building::Building(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost) 
+    : Square(square_pos, coord, name), cost{cost} {
         owner = nullptr;
 }
 
