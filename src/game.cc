@@ -82,7 +82,15 @@ void Game::processInput() {
             }
             std::cout << "===================================================================================" << std::endl;
             for (int i = 0; i < numPlayers; ++i) {
-                std::cout << i + 1 << "-th player: please choose your piece." << std::endl;
+                std::string name = "";
+                std::cout << i + 1 << "-th player: What is your name?" << std::endl;
+                if (!events->readLine()) {
+                    state = NO_GAME;
+                    break;
+                } else {
+                    name = events->getLine();
+                }
+                std::cout << "please choose your piece." << std::endl;
                 std::cout << "Please choose the corresponding symbol from the following pieces." << std::endl;
                 std::cout << "    Goose:                G" << std::endl;
                 std::cout << "    GRT Bus:              B" << std::endl;
@@ -111,51 +119,12 @@ void Game::processInput() {
                         if (used) {
                             std::cout << "That piece has been taken. Please choose another one." << std::endl;
                         } else {
-                            switch (input[0]) {
-                                case 'G': {
-                                    players.emplace_back(std::make_shared<Player>("Goose", 'G'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case 'B': {
-                                    players.emplace_back(std::make_shared<Player>("GRT Bus", 'B'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case 'D': {
-                                    players.emplace_back(std::make_shared<Player>("Tim Hortons Doughnut", 'D'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case 'P': {
-                                    players.emplace_back(std::make_shared<Player>("Professor", 'P'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case 'S': {
-                                    players.emplace_back(std::make_shared<Player>("Student", 'S'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case '$': {
-                                    players.emplace_back(std::make_shared<Player>("Money", '$'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case 'L': {
-                                    players.emplace_back(std::make_shared<Player>("Laptop", 'L'));
-                                    successInput = true;
-                                    break;
-                                }
-                                case 'T': {
-                                    players.emplace_back(std::make_shared<Player>("Pink tie", 'T'));
-                                    successInput = true;
-                                    break;
-                                }
-                                default: {
-                                    std::cout << "Please choose a character from G, B, D, P, S, $, L, T." << std::endl;
-                                    break;
-                                }
+                            if (input[0] == 'G' || input[0] == 'B' || input[0] == 'D' || input[0] == 'P' 
+                                || input[0] == 'S' || input[0] == '$' || input[0] == 'L' || input[0] == 'T') {
+                                players.emplace_back(std::make_shared<Player>(name, input[0]));
+                                successInput = true;
+                            } else {
+                                std::cout << "Please choose a character from G, B, D, P, S, $, L, T." << std::endl;
                             }
                         }
                     } else {
@@ -172,8 +141,50 @@ void Game::processInput() {
             break;
         }
         case IN_GAME: {
-            if (!events->readLine()) {
-                state = NO_GAME;
+            std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
+            std::cout << "Please input a command" << std::endl;
+            std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action on the square they landed on." << std::endl;
+            std::cout << "    next : give control to the next player." << std::endl;
+            std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player offering <give> and requesting <receive>." << std::endl;
+            std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
+            std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
+            std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
+            std::cout << "    bankrupt : blayer declares bankruptcy." << std::endl;
+            std::cout << "    assets : displays the assets of the current player." << std::endl;
+            std::cout << "    all : displays the assets of every player." << std::endl;
+            std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
+            bool successInput = false;
+            while (!successInput) {
+                if (!events->readLine()) {
+                    state = NO_GAME;
+                    break;
+                } else {
+                    if (events->getCommand() == "roll") {
+
+                    } else if (events->getCommand() == "next") {
+                        // TODO : add checks
+                        nextTurn();
+                        successInput = true;
+                    } else if (events->getCommand() == "trade") {
+
+                    } else if (events->getCommand() == "improve") {
+
+                    } else if (events->getCommand() == "mortage") {
+
+                    } else if (events->getCommand() == "unmortgage") {
+
+                    } else if (events->getCommand() == "bankrupt") {
+
+                    } else if (events->getCommand() == "assets") {
+
+                    } else if (events->getCommand() == "all") {
+
+                    } else if (events->getCommand() == "save") {
+
+                    } else {
+                        std::cout << "Please enter a valid command." << std::endl;
+                    }
+                }
             }
             break;
         }

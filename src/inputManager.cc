@@ -3,7 +3,6 @@
 bool InputManager::readLine() {
     args.resize(0);
     args.shrink_to_fit();
-    std::string line;
     if (!getline(std::cin, line)) {
         return false;
     }
@@ -24,6 +23,10 @@ bool InputManager::readLine() {
         }
     }
     return true;
+}
+
+std::string InputManager::getLine() const {
+    return line;
 }
 
 std::string InputManager::getCommand() const {
