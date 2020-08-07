@@ -43,6 +43,7 @@ struct Vec2 {
 
 enum GameState {
     NO_GAME,
+    PRE_GAME,
     IN_GAME,
     WON_GAME,
     LOST_GAME
