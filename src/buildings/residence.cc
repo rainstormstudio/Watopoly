@@ -20,7 +20,14 @@ unsigned int Residence::getRent() const {
     }
 }
 
-void Residence::update(std::vector<std::shared_ptr<Player>> players) {}
+void Residence::update(std::vector<std::shared_ptr<Player>> players) {
+    this->players.clear();
+    for (unsigned int i = 0; i < players.size(); ++i) {
+        if (players[i]->getPosition() == square_pos) {
+            this->players.push_back(players[i]);
+        }
+    }
+}
 
 void Residence::render(std::shared_ptr<Graphics> gfx) {
     int len = name.length();

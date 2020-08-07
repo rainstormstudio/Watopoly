@@ -9,6 +9,7 @@
 #include "nonPropertiesList.h"
 
 void Game::nextTurn() {
+    players[currentPlayer]->setRolled(false);
     currentPlayer = (currentPlayer + 1) % players.size();
 }
 
@@ -144,9 +145,11 @@ void Game::processInput() {
         case IN_GAME: {
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
             std::cout << "Please input a command" << std::endl;
-            std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action on the square they landed on." << std::endl;
+            std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
+            std::cout << "           on the square they landed on." << std::endl;
             std::cout << "    next : give control to the next player." << std::endl;
-            std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player offering <give> and requesting <receive>." << std::endl;
+            std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
+            std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
             std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
             std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
             std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
@@ -161,7 +164,14 @@ void Game::processInput() {
                     break;
                 } else {
                     if (events->getCommand() == "roll") {
-
+                        if (!players[currentPlayer]->rolled()) {
+                            players[currentPlayer]->setPosition((players[currentPlayer]->getPosition() + Math::rollTwoDice()) % 40);
+                            players[currentPlayer]->setRolled(true);
+                            successInput = true;
+                        } else {
+                            std::cout << "You have rolled already." << std::endl;
+                        }
+                        
                     } else if (events->getCommand() == "next") {
                         // TODO : add checks
                         nextTurn();

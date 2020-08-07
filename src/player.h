@@ -16,6 +16,7 @@ class Player {
     unsigned int numGyms;
 
     bool isBankrupt;
+    bool hasRolled;
     
 public:
     Player(std::string name, char symbol);
@@ -27,6 +28,9 @@ public:
     unsigned int getPosition() const;
     unsigned int getGymNum() const;
     unsigned int getResiNum() const;
+
+    void setRolled(bool rolled);
+    bool rolled() const;
 };
 
 #endif
