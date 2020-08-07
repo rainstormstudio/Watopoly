@@ -23,8 +23,11 @@ public:
     std::string getName() const;
     char getSymbol() const;
 
-    unsigned int getPosition() const;
     void setPosition(unsigned int pos);
+    unsigned int getPosition() const;
+    unsigned int getGymNum() const;
+    unsigned int getResiNum() const;
+    
 
     void render(Graphics & gfx);
 };

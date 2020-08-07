@@ -16,3 +16,4 @@ unsigned int Building::getCost() const { return cost; }
 void Building::update(std::shared_ptr<Player> player) {}
 
 void Building::render(std::shared_ptr<Graphics> gfx) {}
+

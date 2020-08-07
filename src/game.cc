@@ -40,7 +40,12 @@ void Game::init() {
     squares.emplace_back(std::make_shared<Academics>(Vec2(91, 21), "C2", 320, "Sci2",    200, 28, 150, 450, 1000, 1200, 1400));
     squares.emplace_back(std::make_shared<Academics>(Vec2(91, 36), "MC", 350, "Math",    200, 35, 175, 500, 1100, 1300, 1500));
     squares.emplace_back(std::make_shared<Academics>(Vec2(91, 46), "DC", 400, "Math",    200, 50, 200, 600, 1400, 1700, 2000));
-
+    squares.emplace_back(std::make_shared<Gym>(Vec2(73, 1), "CIF", 150));
+    squares.emplace_back(std::make_shared<Gym>(Vec2(1, 41), "PAC", 150));
+    squares.emplace_back(std::make_shared<Residence>(Vec2(46, 51), "MKV", 200));
+    squares.emplace_back(std::make_shared<Residence>(Vec2(1, 26), "UWP", 200));
+    squares.emplace_back(std::make_shared<Residence>(Vec2(46, 1), "V1", 200));
+    squares.emplace_back(std::make_shared<Residence>(Vec2(91, 26), "REV", 200));
     state = IN_GAME;
 }
 

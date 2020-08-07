@@ -3,6 +3,8 @@
 
 #include "square.h"
 #include "types.h"
+#include "player.h"
+#include "math.h"
 
 class Building : public Square {
 protected:
@@ -19,6 +21,7 @@ public:
     void update(std::shared_ptr<Player> player) override;
 
     void render(std::shared_ptr<Graphics> gfx) override;
+
 };
 
 #endif
