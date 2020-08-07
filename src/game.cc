@@ -80,17 +80,19 @@ void Game::processInput() {
                     std::cout << "Your input is not a valid number." << std::endl;
                 }
             }
+            std::cout << "===================================================================================" << std::endl;
             for (int i = 0; i < numPlayers; ++i) {
                 std::cout << i + 1 << "-th player: please choose your piece." << std::endl;
-                std::cout << "Please input the corresponding symbol for the following pieces." << std::endl;
-                std::cout << "Goose:                G" << std::endl;
-                std::cout << "GRT Bus:              B" << std::endl;
-                std::cout << "Tim Hortons Doughnut: D" << std::endl;
-                std::cout << "Professor:            P" << std::endl;
-                std::cout << "Student:              S" << std::endl;
-                std::cout << "Money:                $" << std::endl;
-                std::cout << "Laptop:               L" << std::endl;
-                std::cout << "Pink tie:             T" << std::endl;
+                std::cout << "Please choose the corresponding symbol from the following pieces." << std::endl;
+                std::cout << "    Goose:                G" << std::endl;
+                std::cout << "    GRT Bus:              B" << std::endl;
+                std::cout << "    Tim Hortons Doughnut: D" << std::endl;
+                std::cout << "    Professor:            P" << std::endl;
+                std::cout << "    Student:              S" << std::endl;
+                std::cout << "    Money:                $" << std::endl;
+                std::cout << "    Laptop:               L" << std::endl;
+                std::cout << "    Pink tie:             T" << std::endl;
+                std::cout << "Your piece is: ";
                 successInput = false;
                 while (!successInput) {
                     if (!events->readLine()) {
@@ -163,6 +165,8 @@ void Game::processInput() {
                 if (!successInput) {
                     break;
                 }
+
+                std::cout << "-----------------------------------------------------------------------------------" << std::endl;
             }
             currentPlayer = 0;
             break;

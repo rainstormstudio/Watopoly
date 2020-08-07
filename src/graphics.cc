@@ -29,6 +29,7 @@ void Graphics::clear() {
             theDisplay[i][j] = ' ';
         }
     }
+    msg = "";
 }
 
 void Graphics::render() {
@@ -47,6 +48,7 @@ void Graphics::render(unsigned int height) {
         }
         std::cout << std::endl;
     }
+    std::cout << msg << std::endl;
 }
 
 void Graphics::draw(char value, int x, int y) {
@@ -71,4 +73,8 @@ void Graphics::drawImage(std::string filename) {
 
 void Graphics::write(std::string content, int x, int y) {
 
+}
+
+void Graphics::addMsg(std::string str) {
+    msg += str;
 }

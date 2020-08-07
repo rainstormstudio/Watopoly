@@ -10,6 +10,7 @@ class Graphics {
     std::vector<std::vector<char>> theDisplay;
     int screenWidth;
     int screenHeight;
+    std::string msg;
 
 public:
     Graphics(int width, int height);
@@ -24,6 +25,8 @@ public:
     void draw(char value, int x, int y);
     void drawImage(std::string filename);
     void write(std::string content, int x, int y);
+
+    void addMsg(std::string str);
 };
 
 #endif
