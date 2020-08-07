@@ -26,3 +26,4 @@ unsigned int Player::getGymNum() const {
 unsigned int Player::getResiNum() const {
 	return numResi;
 }
+
