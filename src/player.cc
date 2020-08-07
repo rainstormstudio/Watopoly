@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player(std::string name, char symbol)
-	: name{ name }, symbol{ symbol }, position{0} {}
+	: name{name}, symbol{symbol}, position{0} {}
 
 std::string Player::getName() const {
     return name;

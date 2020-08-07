@@ -19,6 +19,7 @@ public:
 
     void clear();
     void render();
+    void render(unsigned int height);
 
     void draw(char value, int x, int y);
     void drawImage(std::string filename);

@@ -40,6 +40,15 @@ void Graphics::render() {
     }
 }
 
+void Graphics::render(unsigned int height) {
+    for (int i = 0; i < screenHeight && i < static_cast<int>(height); ++i) {
+        for (int j = 0; j < screenWidth; ++j) {
+            std::cout << theDisplay[i][j];
+        }
+        std::cout << std::endl;
+    }
+}
+
 void Graphics::draw(char value, int x, int y) {
     theDisplay[y][x] = value;
 }

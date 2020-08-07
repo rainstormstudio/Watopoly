@@ -1,4 +1,5 @@
 #include "game.h"
+#include "math.h"
 #include "graphics.h"
 #include "inputManager.h"
 #include "square.h"
@@ -60,7 +61,110 @@ void Game::processInput() {
             break;
         }
         case PRE_GAME: {
-            std::cout << "How many players? (0-8)" << std::endl;
+            std::cout << "How many players? (1-8)" << std::endl;
+            bool successInput = false;
+            int numPlayers = 0;
+            while (!successInput) {
+                if (!events->readLine()) {
+                    state = NO_GAME;
+                    break;
+                }
+                if (Math::isNat(events->getCommand())) {
+                    numPlayers = std::stoi(events->getCommand());
+                    if (numPlayers >= 1 && numPlayers <= 8) {
+                        successInput = true;
+                    } else {
+                        std::cout << "Your number is not between 1 and 8." << std::endl;
+                    }
+                } else {
+                    std::cout << "Your input is not a valid number." << std::endl;
+                }
+            }
+            for (int i = 0; i < numPlayers; ++i) {
+                std::cout << i + 1 << "-th player: please choose your piece." << std::endl;
+                std::cout << "Please input the corresponding symbol for the following pieces." << std::endl;
+                std::cout << "Goose:                G" << std::endl;
+                std::cout << "GRT Bus:              B" << std::endl;
+                std::cout << "Tim Hortons Doughnut: D" << std::endl;
+                std::cout << "Professor:            P" << std::endl;
+                std::cout << "Student:              S" << std::endl;
+                std::cout << "Money:                $" << std::endl;
+                std::cout << "Laptop:               L" << std::endl;
+                std::cout << "Pink tie:             T" << std::endl;
+                successInput = false;
+                while (!successInput) {
+                    if (!events->readLine()) {
+                        state = NO_GAME;
+                        break;
+                    }
+                    std::string input = events->getCommand();
+                    if (input.length() == 1) {
+                        bool used = false;
+                        for (auto& player : players) {
+                            if (player->getSymbol() == input[0]) {
+                                used = true;
+                                break;
+                            }
+                        }
+                        if (used) {
+                            std::cout << "That piece has been taken. Please choose another one." << std::endl;
+                        } else {
+                            switch (input[0]) {
+                                case 'G': {
+                                    players.emplace_back(std::make_shared<Player>("Goose", 'G'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case 'B': {
+                                    players.emplace_back(std::make_shared<Player>("GRT Bus", 'B'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case 'D': {
+                                    players.emplace_back(std::make_shared<Player>("Tim Hortons Doughnut", 'D'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case 'P': {
+                                    players.emplace_back(std::make_shared<Player>("Professor", 'P'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case 'S': {
+                                    players.emplace_back(std::make_shared<Player>("Student", 'S'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case '$': {
+                                    players.emplace_back(std::make_shared<Player>("Money", '$'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case 'L': {
+                                    players.emplace_back(std::make_shared<Player>("Laptop", 'L'));
+                                    successInput = true;
+                                    break;
+                                }
+                                case 'T': {
+                                    players.emplace_back(std::make_shared<Player>("Pink tie", 'T'));
+                                    successInput = true;
+                                    break;
+                                }
+                                default: {
+                                    std::cout << "Please choose a character from G, B, D, P, S, $, L, T." << std::endl;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        std::cout << "Please enter a single character." << std::endl;
+                    }
+                }
+                if (!successInput) {
+                    break;
+                }
+            }
+            currentPlayer = 0;
             break;
         }
         case IN_GAME: {
