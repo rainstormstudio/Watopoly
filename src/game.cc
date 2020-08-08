@@ -13,7 +13,7 @@ void Game::nextTurn() {
     currentPlayer = (currentPlayer + 1) % players.size();
 }
 
-Game::Game() {
+Game::Game(GameMode mode) : mode{mode} {
     state = NO_GAME;
     currentPlayer = 0;
 }
@@ -21,6 +21,9 @@ Game::Game() {
 bool Game::loop() const { return state != NO_GAME; }
 
 void Game::init() {
+    if (mode == TESTING_GAMEMODE) {
+        std::cout << "Game initialized as Testing Mode." << std::endl;
+    }
     gfx = std::make_shared<Graphics>(101, 56);
     events = std::make_shared<InputManager>();
 
@@ -43,8 +46,12 @@ void Game::init() {
     squares.emplace_back(std::make_shared<Academics>(16, Vec2(1, 21), "LHI", 180, "Health", 100, 14, 70, 200, 550, 750, 950));
     squares.emplace_back(std::make_shared<SLC>(17, Vec2(1, 16), "SLC"));
     squares.emplace_back(std::make_shared<Academics>(18, Vec2(1, 11), "BMH", 180, "Health", 100, 14, 70, 200, 550, 750, 950));
+<<<<<<< HEAD
     squares.emplace_back(std::make_shared<Academics>(19, Vec2(1, 6), "OPT", 200, "Health", 100, 16, 80, 220, 600, 800, 1000));
     squares.emplace_back(std::make_shared<GooseNesting>(20, Vec2(1, 1), "Goose Nesting"));
+=======
+    squares.emplace_back(std::make_shared<Academics>(19, Vec2(1, 6), "OPT", 200, "Health",  100, 16, 80, 220, 600, 800, 1000));
+>>>>>>> 9d5ee8c30b58c630855990b6f828dcd4c10d9958
     squares.emplace_back(std::make_shared<Academics>(21, Vec2(10, 1), "EV1", 220, "Env",    150, 18, 90, 250, 700, 875, 1050));
     squares.emplace_back(std::make_shared<SLC>(22, Vec2(19, 1), "SLC"));
     squares.emplace_back(std::make_shared<Academics>(23, Vec2(28, 1), "EV2", 220, "Env",    150, 18, 90, 250, 700, 875, 1050));
@@ -56,6 +63,7 @@ void Game::init() {
     squares.emplace_back(std::make_shared<Academics>(29, Vec2(82, 1), "B2", 280, "Sci1",    150, 24, 120, 360, 850, 1025, 1200));
     squares.emplace_back(std::make_shared<GoToTims>(30, Vec2(91, 1), "GO TO TIMS"));
     squares.emplace_back(std::make_shared<Academics>(31, Vec2(91, 6), "EIT", 300, "Sci2",   200, 26, 130, 390, 900, 1100, 1275));
+<<<<<<< HEAD
     squares.emplace_back(std::make_shared<Academics>(32, Vec2(91, 11), "ESC", 300, "Sci2",   200, 26, 130, 390, 900, 1100, 1275));
     squares.emplace_back(std::make_shared<SLC>(33, Vec2(91, 16), "SLC"));
     squares.emplace_back(std::make_shared<Academics>(34, Vec2(91, 21), "C2", 320, "Sci2",    200, 28, 150, 450, 1000, 1200, 1400));
@@ -64,6 +72,13 @@ void Game::init() {
     squares.emplace_back(std::make_shared<Academics>(37, Vec2(91, 36), "MC", 350, "Math",    200, 35, 175, 500, 1100, 1300, 1500));
     squares.emplace_back(std::make_shared<CoopFee>(38, Vec2(91, 41), "COOP FEE"));
     squares.emplace_back(std::make_shared<Academics>(39, Vec2(91, 46), "DC", 400, "Math",    200, 50, 200, 600, 1400, 1700, 2000));
+=======
+    squares.emplace_back(std::make_shared<Academics>(32, Vec2(91, 11), "ESC", 300, "Sci2",  200, 26, 130, 390, 900, 1100, 1275));
+    squares.emplace_back(std::make_shared<Academics>(34, Vec2(91, 21), "C2", 320, "Sci2",   200, 28, 150, 450, 1000, 1200, 1400));
+    squares.emplace_back(std::make_shared<Residence>(35, Vec2(91, 26), "REV", 200));
+    squares.emplace_back(std::make_shared<Academics>(37, Vec2(91, 36), "MC", 350, "Math",   200, 35, 175, 500, 1100, 1300, 1500));
+    squares.emplace_back(std::make_shared<Academics>(39, Vec2(91, 46), "DC", 400, "Math",   200, 50, 200, 600, 1400, 1700, 2000));
+>>>>>>> 9d5ee8c30b58c630855990b6f828dcd4c10d9958
     
     state = PRE_GAME;
 }
@@ -156,8 +171,12 @@ void Game::processInput() {
         case IN_GAME: {
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
             std::cout << "Please input a command" << std::endl;
-            std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
-            std::cout << "           on the square they landed on." << std::endl;
+            if (mode == NORMAL_GAMEMODE) {
+                std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
+                std::cout << "           on the square they landed on." << std::endl;
+            } else if (mode == TESTING_GAMEMODE) {
+                std::cout << "    roll <die1> <die2>" << std::endl;
+            }
             std::cout << "    next : give control to the next player." << std::endl;
             std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
             std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
@@ -175,14 +194,27 @@ void Game::processInput() {
                     break;
                 } else {
                     if (events->getCommand() == "roll") {
-                        if (!players[currentPlayer]->rolled()) {
-                            players[currentPlayer]->setPosition((players[currentPlayer]->getPosition() + Math::rollTwoDice()) % 40);
-                            players[currentPlayer]->setRolled(true);
-                            successInput = true;
-                        } else {
-                            std::cout << "You have rolled already." << std::endl;
+                        if (mode == NORMAL_GAMEMODE) {
+                            if (!players[currentPlayer]->rolled()) {
+                                players[currentPlayer]->setPosition((players[currentPlayer]->getPosition() + Math::rollTwoDice()) % 40);
+                                players[currentPlayer]->setRolled(true);
+                                successInput = true;
+                            } else {
+                                std::cout << "You have rolled already." << std::endl;
+                            }
+                        } else if (mode == TESTING_GAMEMODE) {
+                            if (!players[currentPlayer]->rolled()) {
+                                if (Math::isNat(events->getArg(0)) && Math::isNat(events->getArg(1))) {
+                                    players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + std::stoi(events->getArg(0)) + std::stoi(events->getArg(1)));
+                                    players[currentPlayer]->setRolled(true);
+                                    successInput = true;
+                                } else {
+                                    std::cout << "Please input two natural numbers." << std::endl;
+                                }
+                            } else {
+                                std::cout << "You have rolled already." << std::endl;
+                            }
                         }
-                        
                     } else if (events->getCommand() == "next") {
                         // TODO : add checks
                         nextTurn();

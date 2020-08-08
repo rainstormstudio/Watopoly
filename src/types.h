@@ -50,4 +50,9 @@ enum GameState {
     LOST_GAME
 };
 
+enum GameMode {
+    NORMAL_GAMEMODE,
+    TESTING_GAMEMODE
+};
+
 #endif

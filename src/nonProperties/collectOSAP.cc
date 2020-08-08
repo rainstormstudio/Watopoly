@@ -5,6 +5,7 @@ CollectOSAP::CollectOSAP(unsigned int square_pos, Vec2 coord, std::string name)
 }
 
 void CollectOSAP::update(std::vector<std::shared_ptr<Player>> players) {
+<<<<<<< HEAD
     this->players.clear();
     unsigned int OSAPFee = 200;
     for (unsigned int i = 0; i < players.size(); ++i) {
@@ -13,6 +14,9 @@ void CollectOSAP::update(std::vector<std::shared_ptr<Player>> players) {
             this->players.push_back(players[i]);
         }
     }
+=======
+    updatePlayers(players);
+>>>>>>> 9d5ee8c30b58c630855990b6f828dcd4c10d9958
 }
 
 void CollectOSAP::render(std::shared_ptr<Graphics> gfx) {
