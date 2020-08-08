@@ -21,12 +21,7 @@ unsigned int Gym::getUsageFee() const {
 }
 
 void Gym::update(std::vector<std::shared_ptr<Player>> players) {
-    this->players.clear();
-    for (unsigned int i = 0; i < players.size(); ++i) {
-        if (players[i]->getPosition() == square_pos) {
-            this->players.push_back(players[i]);
-        }
-    }
+    updatePlayers(players);
 }
 
 void Gym::render(std::shared_ptr<Graphics> gfx) {

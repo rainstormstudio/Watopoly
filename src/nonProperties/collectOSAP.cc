@@ -5,12 +5,7 @@ CollectOSAP::CollectOSAP(unsigned int square_pos, Vec2 coord, std::string name)
 }
 
 void CollectOSAP::update(std::vector<std::shared_ptr<Player>> players) {
-    this->players.clear();
-    for (unsigned int i = 0; i < players.size(); ++i) {
-        if (players[i]->getPosition() == square_pos) {
-            this->players.push_back(players[i]);
-        }
-    }
+    updatePlayers(players);
 }
 
 void CollectOSAP::render(std::shared_ptr<Graphics> gfx) {

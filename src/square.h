@@ -17,6 +17,8 @@ public:
     std::string getName() const;
 
     void setCoordinate(int x, int y);
+    
+    void updatePlayers(std::vector<std::shared_ptr<Player>> players);
 
     virtual void update(std::vector<std::shared_ptr<Player>> players) = 0;
 
