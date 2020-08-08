@@ -10,7 +10,9 @@ class Player {
     std::string name;
     char symbol;
     unsigned int position;
-    int balance;
+    unsigned int balance;
+    unsigned int owedBank;
+    std::map<char, unsigned int> oweOtherPlayers;
 
     unsigned int numResi;
     unsigned int numGyms;
@@ -31,6 +33,9 @@ public:
 
     void setRolled(bool rolled);
     bool rolled() const;
+
+    void AddBalance(unsigned int total);
+    void DecBalance(unsigned int total, char oweWhom);
 };
 
 #endif
