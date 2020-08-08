@@ -9,7 +9,7 @@ void CollectOSAP::update(std::vector<std::shared_ptr<Player>> players) {
     unsigned int OSAPFee = 200;
     for (unsigned int i = 0; i < players.size(); ++i) {
         if (players[i]->getPosition() == square_pos) {
-            players[i]->AddBalance(OSAPFee); // when player is on OSAP square, they receive $200
+            //players[i]->AddBalance(OSAPFee); // when player is on OSAP square, they receive $200
             this->players.push_back(players[i]);
         }
     }

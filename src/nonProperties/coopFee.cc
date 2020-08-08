@@ -8,7 +8,7 @@ void CoopFee::update(std::vector<std::shared_ptr<Player>> players) {
     unsigned int CoopFee = 150;
     for (unsigned int i = 0; i < players.size(); i++) {
         if (players[i]->getPosition() == square_pos) {
-            players[i]->DecBalance(CoopFee, players[i]->getSymbol());
+            //players[i]->DecBalance(CoopFee, players[i]->getSymbol());
             this->players.push_back(players[i]);
         }
     }
