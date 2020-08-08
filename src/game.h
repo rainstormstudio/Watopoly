@@ -10,6 +10,7 @@ class Building;
 class Player;
 
 class Game {
+    GameMode mode;
     GameState state;
     std::shared_ptr<Graphics> gfx;
     std::shared_ptr<InputManager> events;
@@ -27,7 +28,7 @@ class Game {
     void saveGame();
     void loadGame();
 public:
-    Game();
+    Game(GameMode mode);
 
     bool loop() const;
 
