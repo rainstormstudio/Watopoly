@@ -4,7 +4,6 @@
 #include "../nonProperty.h"
 
 class GooseNesting : public NonProperty {
-	std::vector<std::string> attacked_names;
 
 public:
     GooseNesting(unsigned int square_pos, Vec2 coord, std::string name);
