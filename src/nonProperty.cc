@@ -5,9 +5,9 @@ NonProperty::NonProperty(unsigned int square_pos, Vec2 coord, std::string name)
 
 }
 
-void NonProperty::setMortgage() {}
+//void NonProperty::setMortgage() {}
 
-void NonProperty::removeMortgage() {}
+//void NonProperty::removeMortgage() {}
 
 std::string NonProperty::getOwnerName() {
     return "NonProperty";

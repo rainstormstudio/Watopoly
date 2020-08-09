@@ -10,8 +10,10 @@ class Player {
     std::string name;
     char symbol;
     unsigned int position;
-    unsigned int balance;
-    unsigned int owedBank;
+    double balance;
+    double asset;
+
+    double owedBank;
     std::map<char, unsigned int> oweOtherPlayers;
 
     unsigned int numResi;
@@ -31,11 +33,17 @@ public:
     unsigned int getGymNum() const;
     unsigned int getResiNum() const;
 
+    double getAsset() const;
+    void changeAsset(double c);
+
+    void mortgage(std::shared_ptr<Building> building);
+    void unmortgage(std::shared_ptr<Building> building);
+
     void setRolled(bool rolled);
     bool rolled() const;
 
-    void AddBalance(unsigned int total);
-    void DecBalance(unsigned int total, char oweWhom);
+    void AddBalance(double total);
+    void DecBalance(double total, char oweWhom);
 };
 
 #endif

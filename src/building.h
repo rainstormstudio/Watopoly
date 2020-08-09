@@ -19,9 +19,9 @@ public:
 
     unsigned int getCost() const;
 
-    void setMortgage() override;
+    bool getMortgage() const;
 
-    void removeMortgage() override;
+    void setMortgage(bool SetOrNot);
 
     std::string getOwnerName() override;
 

@@ -220,18 +220,12 @@ void Game::processInput() {
                                 if (squares[i]->getType() == "Academic" ||
                                     squares[i]->getType() == "Gym" ||
                                     squares[i]->getType() == "Residence") {
-                                        std::cout << "Mortgage debug" << std::endl;
-                                        std::cout << "Get Name: " << players[currentPlayer]->getName() << std::endl;
-                                        // determine if current player is the owner
-                                        if (players[currentPlayer]->getName() == squares[i]->getOwnerName()) {
-                                            std::cout << "Mortgage debug" << std::endl;
-                                            squares[i]->setMortgage();
-                                        } else {
-                                            std::cout << "Current player is not the owner! Cannot mortgage!" << std::endl;
-                                        }
+                                        std::shared_ptr<Building> building;
+                                        building = std::dynamic_pointer_cast<Building>(building);
+                                        players[currentPlayer]->mortgage(building);
                                         break;
                                 } else {
-                                    std::cout << "Cannot mortgage NonProperty!" << std::endl;
+                                    std::cout << "Cannot mortgage NonProperty or Academic Buildings!" << std::endl;
                                     break;
                                 }
                             }

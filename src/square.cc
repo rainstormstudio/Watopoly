@@ -14,7 +14,6 @@ void Square::updatePlayers(std::vector<std::shared_ptr<Player>> players) {
     }
 }
 
-
 std::string Square::getName() const { return name; }
 
 void Square::setCoordinate(int x, int y) {

@@ -14,24 +14,25 @@ void Building::setOwner(std::shared_ptr<Player> player) {
 
 unsigned int Building::getCost() const { return cost; }
 
-void Building::setMortgage() {
-    if (mortgaged == true) {
+bool Building::getMortgage() const { return mortgaged; }
+
+void Building::setMortgage(bool SetOrNot) {
+    if (mortgaged == true && mortgaged == SetOrNot) {
         std::cout << "Mortgage is already activated!" << std::endl;
         return;
     }
-    mortgaged = true;
-    std::cout << "Mortgage is activated successfully!" << std::endl;
-    return;
-}
-
-void Building::removeMortgage() {
-    if (mortgaged == false) {
-        std::cout << "Mortgage is already deactivated" << std::endl;
-        return;
+    if (mortgaged == false && mortgaged == SetOrNot) {
+        std::cout << "Mortgage is already deactivated!" << std::endl;
+        return;       
     }
-    mortgaged = false;
-    std::cout << "Mortgage is deactivated successfully!" << std::endl;
-    return;
+    mortgaged = SetOrNot;
+    if (SetOrNot == true) {
+        std::cout << "Mortgage is activated successfully!" << std::endl;
+        return;
+    } else {
+        std::cout << "Mortgage is deactivated successfully!" << std::endl;
+        return;       
+    }
 }
 
 std::string Building::getOwnerName() {

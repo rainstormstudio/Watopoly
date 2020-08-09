@@ -8,9 +8,9 @@ class NonProperty : public Square {
 public:
     NonProperty(unsigned int square_pos, Vec2 coord, std::string name);
 
-    void setMortgage() override;
+    //void setMortgage() override;
 
-    void removeMortgage() override;
+    //void removeMortgage() override;
 
     std::string getOwnerName() override;
 

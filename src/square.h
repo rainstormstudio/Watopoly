@@ -20,9 +20,9 @@ public:
     
     void updatePlayers(std::vector<std::shared_ptr<Player>> players);
 
-    virtual void setMortgage() = 0;
+    //virtual void setMortgage() = 0;
 
-    virtual void removeMortgage() = 0;
+    //virtual void removeMortgage() = 0;
 
     virtual std::string getOwnerName() = 0;
 
