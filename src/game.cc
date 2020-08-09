@@ -171,7 +171,7 @@ void Game::processInput() {
             std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
             std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
             std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
-            std::cout << "    bankrupt : blayer declares bankruptcy." << std::endl;
+            std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
             std::cout << "    assets : displays the assets of the current player." << std::endl;
             std::cout << "    all : displays the assets of every player." << std::endl;
             std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
@@ -211,8 +211,10 @@ void Game::processInput() {
 
                     } else if (events->getCommand() == "improve") {
 
-                    } else if (events->getCommand() == "mortage") {
-
+                    } else if (events->getCommand() == "mortgage") {
+                        for (unsigned int i = 0; i < squares.size(); i++) {
+                        }
+                        std::cout << "Please enter the correct property!" << std::endl;
                     } else if (events->getCommand() == "unmortgage") {
 
                     } else if (events->getCommand() == "bankrupt") {

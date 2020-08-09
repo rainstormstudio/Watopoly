@@ -10,6 +10,7 @@ class Building : public Square {
 protected:
     unsigned int cost;
     std::shared_ptr<Player> owner;
+    bool mortgaged = false;
 public:
     Building(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost);
 
