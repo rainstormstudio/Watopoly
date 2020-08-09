@@ -3,6 +3,10 @@
 Tuition::Tuition(unsigned int square_pos, Vec2 coord, std::string name)
     : NonProperty(square_pos, coord, name) {}
 
+std::string Tuition::getType() {
+    return "NonProperty";
+}
+
 void Tuition::update(std::vector<std::shared_ptr<Player>> players) {
     this->players.clear();
     for (unsigned int i = 0; i < players.size(); ++i) {

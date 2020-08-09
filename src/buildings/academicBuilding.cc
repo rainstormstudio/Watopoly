@@ -22,8 +22,24 @@ unsigned int Academics::getImprovementCost() const { return improvementCost; }
 
 unsigned int Academics::getImprovement() const { return improvement; }
 
+bool Academics::addImprovement() {
+    if (improvement == 5) return false;
+    ++improvement;
+    return true;
+}
+
+bool Academics::removeImprovement() {
+    if (improvement == 0) return false;
+    --improvement;
+    return true;
+}
+
 void Academics::update(std::vector<std::shared_ptr<Player>> players) {
     updatePlayers(players);
+}
+
+std::string Academics::getType() {
+    return "Academic";
 }
 
 void Academics::render(std::shared_ptr<Graphics> gfx) {

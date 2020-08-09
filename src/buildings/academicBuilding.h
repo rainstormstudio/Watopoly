@@ -7,7 +7,7 @@ class Academics : public Building {
     std::string block;
     unsigned int improvementCost;
     unsigned int tuitions[6];
-    unsigned int improvement;
+    unsigned int improvement = 0;
 public:
     Academics(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost,
               std::string block, unsigned int improvementCost, 
@@ -20,6 +20,10 @@ public:
     unsigned int getImprovementCost() const;
 
     unsigned int getImprovement() const;
+    bool addImprovement();
+    bool removeImprovement(); // bool so that we know whether successfully add or remove
+
+    std::string getType() override;
     
     void update(std::vector<std::shared_ptr<Player>> players) override;
 

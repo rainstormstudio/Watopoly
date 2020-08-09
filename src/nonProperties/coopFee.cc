@@ -3,6 +3,10 @@
 CoopFee::CoopFee(unsigned int square_pos, Vec2 coord, std::string name)
     : NonProperty(square_pos, coord, name) {}
 
+std::string CoopFee::getType() {
+    return "NonProperty";
+}
+
 void CoopFee::update(std::vector<std::shared_ptr<Player>> players) {
     this->players.clear();
     unsigned int CoopFee = 150;

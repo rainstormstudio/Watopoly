@@ -20,6 +20,14 @@ public:
     
     void updatePlayers(std::vector<std::shared_ptr<Player>> players);
 
+    virtual void setMortgage() = 0;
+
+    virtual void removeMortgage() = 0;
+
+    virtual std::string getOwnerName() = 0;
+
+    virtual std::string getType() = 0;
+
     virtual void update(std::vector<std::shared_ptr<Player>> players) = 0;
 
     virtual void render(std::shared_ptr<Graphics> gfx) = 0;
