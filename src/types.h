@@ -55,4 +55,26 @@ enum GameMode {
     TESTING_GAMEMODE
 };
 
+struct PlayerData {
+    std::string name;
+    char symbol;
+    unsigned int timsCups;
+    unsigned int money;
+    unsigned int position;
+    bool isInDCTims;
+    unsigned int DCturns;
+};
+
+struct BuildingData {
+    std::string name;
+    std::string owner;
+    int improvements;
+};
+
+struct SaveData {
+    unsigned int numPlayers;
+    std::vector<PlayerData> playerData;
+    std::vector<BuildingData> buildingData;
+};
+
 #endif

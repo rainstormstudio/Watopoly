@@ -24,8 +24,16 @@ unsigned int Player::getPosition() const {
     return position;
 }
 
+void Player::setGymNum(unsigned int num) {
+    numGyms = num;
+}
+
 unsigned int Player::getGymNum() const {
     return numGyms;
+}
+
+void Player::setResiNum(unsigned int num) {
+    numResi = num;
 }
 
 unsigned int Player::getResiNum() const {
@@ -66,6 +74,16 @@ void Player::setRolled(bool rolled) {
     hasRolled = rolled;
 }
 bool Player::rolled() const { return hasRolled; }
+
+void Player::setTimsCups(unsigned int num) {
+    numTimsCups = num;
+}
+
+unsigned int Player::getTimsCups() const { return numTimsCups; }
+
+void Player::setBalance(double value) {
+    balance = value;
+}
 
 void Player::AddBalance(double total) {
     balance+=total;

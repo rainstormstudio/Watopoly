@@ -13,7 +13,75 @@ void Game::nextTurn() {
     currentPlayer = (currentPlayer + 1) % players.size();
 }
 
-Game::Game(GameMode mode) : mode{mode} {
+void Game::buy(std::shared_ptr<Building> building) {}
+void Game::auction(std::shared_ptr<Building> building) {}
+void Game::trade() {}
+
+void Game::saveGame() {}
+void Game::loadGame(std::string filename) {
+    data = nullptr;
+    std::string line;
+    std::ifstream infile {filename};
+    if (infile.is_open()) {
+        data = std::make_shared<SaveData>();
+        data->numPlayers = 0;
+        data->playerData.resize(0);
+        data->buildingData.resize(0);
+        if (getline(infile, line)) {
+            if (Math::isNat(line)) {
+                data->numPlayers = static_cast<unsigned int>(std::stoi(line));
+            } else {
+                data = nullptr;
+                return;
+            }
+        } else {
+            data = nullptr;
+            return;
+        }
+        for (unsigned int i = 0; i < data->numPlayers; ++i) {
+            if (getline(infile, line)) {
+                std::vector<std::string> tokens = InputManager::split(line);
+                PlayerData playerData; 
+                try {
+                    if (std::stoi(tokens[4]) == 10) {
+                        playerData = {tokens[0], tokens[1][0], 
+                                        static_cast<unsigned int>(std::stoi(tokens[2])), 
+                                        static_cast<unsigned int>(std::stoi(tokens[3])), 
+                                        static_cast<unsigned int>(std::stoi(tokens[4])), 
+                                        static_cast<bool>(std::stoi(tokens[5]), 
+                                        static_cast<unsigned int>(std::stoi(tokens[6])))};
+                    } else {
+                        playerData = {tokens[0], tokens[1][0], 
+                                        static_cast<unsigned int>(std::stoi(tokens[2])), 
+                                        static_cast<unsigned int>(std::stoi(tokens[3])), 
+                                        static_cast<unsigned int>(std::stoi(tokens[4])), 0, 0};
+                    }
+                    data->playerData.emplace_back(playerData);
+                } catch (...) {
+                    data = nullptr;
+                    return;
+                }
+            } else {
+                data = nullptr;
+                return;
+            }
+        }
+        while (getline(infile, line)) {
+            std::vector<std::string> tokens = InputManager::split(line);
+            BuildingData buildingData;
+            try {
+                buildingData = {tokens[0], tokens[1], std::stoi(tokens[2])};
+                data->buildingData.emplace_back(buildingData);
+            } catch (...) {
+                data = nullptr;
+                return;
+            }
+        }
+    } 
+}
+
+Game::Game(GameMode mode, std::string loadFile) : mode{mode} {
+    loadGame(loadFile);
     state = NO_GAME;
     currentPlayer = 0;
 }
@@ -27,6 +95,7 @@ void Game::init() {
     gfx = std::make_shared<Graphics>(101, 56);
     events = std::make_shared<InputManager>();
 
+    squares.resize(0);
     squares.emplace_back(std::make_shared<CollectOSAP>(0, Vec2(91, 51), "COLLECT OSAP"));
     squares.emplace_back(std::make_shared<Academics>(1, Vec2(82, 51), "AL", 40, "Arts1",    50,  2, 10, 30, 90, 160, 250));
     squares.emplace_back(std::make_shared<SLC>(2, Vec2(73, 51), "SLC"));
@@ -77,81 +146,91 @@ void Game::processInput() {
             break;
         }
         case PRE_GAME: {
-            std::cout << "How many players? (1-8)" << std::endl;
-            bool successInput = false;
-            int numPlayers = 0;
-            while (!successInput) {
-                if (!events->readLine()) {
-                    state = NO_GAME;
-                    break;
+            if (data) {
+                for ( unsigned int i = 0; i < data->numPlayers; ++i) {
+                    players.emplace_back(std::make_shared<Player>(data->playerData[i].name, data->playerData[i].symbol));
+                    players[players.size() - 1]->setPosition(data->playerData[i].position);
+                    players[players.size() - 1]->setBalance(data->playerData[i].money);
+                    players[players.size() - 1]->setTimsCups(data->playerData[i].timsCups);
+                    // TODO: more about player ...
                 }
-                if (Math::isNat(events->getCommand())) {
-                    numPlayers = std::stoi(events->getCommand());
-                    if (numPlayers >= 1 && numPlayers <= 8) {
-                        successInput = true;
-                    } else {
-                        std::cout << "Your number is not between 1 and 8." << std::endl;
-                    }
-                } else {
-                    std::cout << "Your input is not a valid number." << std::endl;
-                }
-            }
-            std::cout << "===================================================================================" << std::endl;
-            for (int i = 0; i < numPlayers; ++i) {
-                std::string name = "";
-                std::cout << i + 1 << "-th player: What is your name?" << std::endl;
-                if (!events->readLine()) {
-                    state = NO_GAME;
-                    break;
-                } else {
-                    name = events->getLine();
-                }
-                std::cout << "please choose your piece." << std::endl;
-                std::cout << "Please choose the corresponding symbol from the following pieces." << std::endl;
-                std::cout << "    Goose:                G" << std::endl;
-                std::cout << "    GRT Bus:              B" << std::endl;
-                std::cout << "    Tim Hortons Doughnut: D" << std::endl;
-                std::cout << "    Professor:            P" << std::endl;
-                std::cout << "    Student:              S" << std::endl;
-                std::cout << "    Money:                $" << std::endl;
-                std::cout << "    Laptop:               L" << std::endl;
-                std::cout << "    Pink tie:             T" << std::endl;
-                std::cout << "Your piece is: ";
-                successInput = false;
+            } else {
+                std::cout << "How many players? (1-8)" << std::endl;
+                bool successInput = false;
+                int numPlayers = 0;
                 while (!successInput) {
                     if (!events->readLine()) {
                         state = NO_GAME;
                         break;
                     }
-                    std::string input = events->getCommand();
-                    if (input.length() == 1) {
-                        bool used = false;
-                        for (auto& player : players) {
-                            if (player->getSymbol() == input[0]) {
-                                used = true;
-                                break;
-                            }
-                        }
-                        if (used) {
-                            std::cout << "That piece has been taken. Please choose another one." << std::endl;
+                    if (Math::isNat(events->getCommand())) {
+                        numPlayers = std::stoi(events->getCommand());
+                        if (numPlayers >= 1 && numPlayers <= 8) {
+                            successInput = true;
                         } else {
-                            if (input[0] == 'G' || input[0] == 'B' || input[0] == 'D' || input[0] == 'P' 
-                                || input[0] == 'S' || input[0] == '$' || input[0] == 'L' || input[0] == 'T') {
-                                players.emplace_back(std::make_shared<Player>(name, input[0]));
-                                successInput = true;
-                            } else {
-                                std::cout << "Please choose a character from G, B, D, P, S, $, L, T." << std::endl;
-                            }
+                            std::cout << "Your number is not between 1 and 8." << std::endl;
                         }
                     } else {
-                        std::cout << "Please enter a single character." << std::endl;
+                        std::cout << "Your input is not a valid number." << std::endl;
                     }
                 }
-                if (!successInput) {
-                    break;
-                }
+                std::cout << "===================================================================================" << std::endl;
+                for (int i = 0; i < numPlayers; ++i) {
+                    std::string name = "";
+                    std::cout << i + 1 << "-th player: What is your name?" << std::endl;
+                    if (!events->readLine()) {
+                        state = NO_GAME;
+                        break;
+                    } else {
+                        name = events->getLine();
+                    }
+                    std::cout << "please choose your piece." << std::endl;
+                    std::cout << "Please choose the corresponding symbol from the following pieces." << std::endl;
+                    std::cout << "    Goose:                G" << std::endl;
+                    std::cout << "    GRT Bus:              B" << std::endl;
+                    std::cout << "    Tim Hortons Doughnut: D" << std::endl;
+                    std::cout << "    Professor:            P" << std::endl;
+                    std::cout << "    Student:              S" << std::endl;
+                    std::cout << "    Money:                $" << std::endl;
+                    std::cout << "    Laptop:               L" << std::endl;
+                    std::cout << "    Pink tie:             T" << std::endl;
+                    std::cout << "Your piece is: ";
+                    successInput = false;
+                    while (!successInput) {
+                        if (!events->readLine()) {
+                            state = NO_GAME;
+                            break;
+                        }
+                        std::string input = events->getCommand();
+                        if (input.length() == 1) {
+                            bool used = false;
+                            for (auto& player : players) {
+                                if (player->getSymbol() == input[0]) {
+                                    used = true;
+                                    break;
+                                }
+                            }
+                            if (used) {
+                                std::cout << "That piece has been taken. Please choose another one." << std::endl;
+                            } else {
+                                if (input[0] == 'G' || input[0] == 'B' || input[0] == 'D' || input[0] == 'P' 
+                                    || input[0] == 'S' || input[0] == '$' || input[0] == 'L' || input[0] == 'T') {
+                                    players.emplace_back(std::make_shared<Player>(name, input[0]));
+                                    successInput = true;
+                                } else {
+                                    std::cout << "Please choose a character from G, B, D, P, S, $, L, T." << std::endl;
+                                }
+                            }
+                        } else {
+                            std::cout << "Please enter a single character." << std::endl;
+                        }
+                    }
+                    if (!successInput) {
+                        break;
+                    }
 
-                std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+                    std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+                }
             }
             currentPlayer = 0;
             break;
@@ -171,7 +250,7 @@ void Game::processInput() {
             std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
             std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
             std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
-            std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
+            std::cout << "    bankrupt : blayer declares bankruptcy." << std::endl;
             std::cout << "    assets : displays the assets of the current player." << std::endl;
             std::cout << "    all : displays the assets of every player." << std::endl;
             std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
@@ -208,31 +287,11 @@ void Game::processInput() {
                         nextTurn();
                         successInput = true;
                     } else if (events->getCommand() == "trade") {
-
+                        
                     } else if (events->getCommand() == "improve") {
 
-                    } else if (events->getCommand() == "mortgage") {
-                        bool existing = false;
-                        for (unsigned int i = 0; i < squares.size(); i++) {
-                            if (events->getArg(0) == squares[i]->getName()) {
-                                existing = true;
-                                // debugging use
-                                if (squares[i]->getType() == "Academic" ||
-                                    squares[i]->getType() == "Gym" ||
-                                    squares[i]->getType() == "Residence") {
-                                        std::shared_ptr<Building> building;
-                                        building = std::dynamic_pointer_cast<Building>(building);
-                                        players[currentPlayer]->mortgage(building);
-                                        break;
-                                } else {
-                                    std::cout << "Cannot mortgage NonProperty or Academic Buildings!" << std::endl;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!existing) {
-                            std::cout << "Please enter the correct property!" << std::endl;
-                        }
+                    } else if (events->getCommand() == "mortage") {
+
                     } else if (events->getCommand() == "unmortgage") {
 
                     } else if (events->getCommand() == "bankrupt") {

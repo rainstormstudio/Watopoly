@@ -10,6 +10,7 @@ protected:
 	unsigned int square_pos;
     Vec2 coordinate;    // defines the coordinate of the square on the gameboard
     std::vector<std::shared_ptr<Player>> players;
+    std::shared_ptr<Player> newPlayer;
     std::string name;
 public:
     Square(unsigned int square_pos, Vec2 coord, std::string name);

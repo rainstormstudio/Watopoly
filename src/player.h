@@ -18,6 +18,7 @@ class Player {
 
     unsigned int numResi;
     unsigned int numGyms;
+    unsigned int numTimsCups;
 
     bool isBankrupt;
     bool hasRolled;
@@ -30,7 +31,11 @@ public:
 
     void setPosition(unsigned int pos);
     unsigned int getPosition() const;
+
+    void setGymNum(unsigned int num);
     unsigned int getGymNum() const;
+
+    void setResiNum(unsigned int num);
     unsigned int getResiNum() const;
 
     double getAsset() const;
@@ -42,6 +47,10 @@ public:
     void setRolled(bool rolled);
     bool rolled() const;
 
+    void setTimsCups(unsigned int num);
+    unsigned int getTimsCups() const;
+
+    void setBalance(double value);
     void AddBalance(double total);
     void DecBalance(double total, char oweWhom);
 };

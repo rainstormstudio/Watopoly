@@ -20,6 +20,8 @@ public:
     std::string getCommand() const;
     std::vector<std::string> getArgs() const;
     std::string getArg(unsigned int index) const;
+
+    static std::vector<std::string> split(const std::string str);
 };
 
 #endif

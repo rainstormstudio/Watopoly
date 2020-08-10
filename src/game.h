@@ -11,6 +11,7 @@ class Player;
 
 class Game {
     GameMode mode;
+    std::shared_ptr<SaveData> data;
     GameState state;
     std::shared_ptr<Graphics> gfx;
     std::shared_ptr<InputManager> events;
@@ -26,9 +27,9 @@ class Game {
     void trade();
 
     void saveGame();
-    void loadGame();
+    void loadGame(std::string filename);
 public:
-    Game(GameMode mode);
+    Game(GameMode mode, std::string loadFile);
 
     bool loop() const;
 

@@ -43,3 +43,18 @@ std::string InputManager::getArg(unsigned int index) const {
     }
     return args[index];
 }
+
+std::vector<std::string> InputManager::split(const std::string str) {
+    std::vector<std::string> result;
+    int len = str.length();
+    std::string token = "";
+    for (int i = 0; i <= len; ++i) {
+        if (i == len || str[i] == ' ') {
+            result.push_back(token);
+            token = "";
+        } else {
+            token += str[i];
+        }
+    }
+    return result;
+}
