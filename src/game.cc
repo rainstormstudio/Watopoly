@@ -261,6 +261,7 @@ void Game::processInput() {
                         }
                     }
                 }
+                players[currentPlayer]->setCanBuy(false);
             }
             std::cout << "================================================================================" << std::endl;
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
