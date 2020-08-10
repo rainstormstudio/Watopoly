@@ -249,6 +249,12 @@ void Game::processInput() {
                                 unsigned int cost = building->getCost();
                                 building->setOwner(players[currentPlayer]);
                                 players[currentPlayer]->decBalance(cost);
+                                if (std::dynamic_pointer_cast<Gym>(building)) {
+                                    players[currentPlayer]->setGymNum(players[currentPlayer]->getGymNum() + 1);
+                                }
+                                if (std::dynamic_pointer_cast<Residence>(building)) {
+                                    players[currentPlayer]->setResiNum(players[currentPlayer]->getResiNum() + 1);
+                                }
                                 successInput = true;
                                 std::cout << players[currentPlayer]->getName() << " bought " << building->getName() << ". " << std::endl;
                             } else {
