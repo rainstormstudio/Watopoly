@@ -5,6 +5,7 @@ Player::Player(std::string name, char symbol)
 	: name{name}, symbol{symbol}, position{0}, balance{1500}, owedBank{0}, numResi{0}, numGyms{0} {
     hasRolled = false;
     isBankrupt = false;
+    canBuy = false;
     oweOtherPlayers = std::map<char, unsigned int> { {'G',0}, {'B',0}, {'D',0}, {'P',0},{'S',0},{'$',0},{'L',0},{'T',0} };
 }
 
@@ -115,11 +116,15 @@ void Player::setBalance(int value) {
     balance = value;
 }
 
-void Player::AddBalance(int total) {
-    balance+=total;
+void Player::addBalance(unsigned int total) {
+    balance += total;
 }
 
-void Player::DecBalance(int total, char oweWhom) {
+void Player::decBalance(unsigned int total) {
+    balance -= total;
+}
+
+void Player::decBalance(unsigned int total, char oweWhom) {
     if ((balance-total) < 0) {
         // should consider different cases here? To bank or other players?
         unsigned int totalOwe = total - balance;
@@ -131,4 +136,14 @@ void Player::DecBalance(int total, char oweWhom) {
     } else {
         balance -= total;
     }
+}
+
+unsigned int Player::getBalance() const { return balance; }
+
+void Player::setCanBuy(bool value) {
+    canBuy = value;
+}
+
+bool Player::getCanBuy() const {
+    return canBuy;
 }

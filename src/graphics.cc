@@ -39,6 +39,7 @@ void Graphics::render() {
         }
         std::cout << std::endl;
     }
+    std::cout << msg << std::endl;
 }
 
 void Graphics::render(unsigned int height) {

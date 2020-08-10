@@ -162,7 +162,7 @@ void Game::processInput() {
                     if (!events->readLine()) {
                         state = NO_GAME;
                         break;
-                    }
+                    } 
                     if (Math::isNat(events->getCommand())) {
                         numPlayers = std::stoi(events->getCommand());
                         if (numPlayers >= 1 && numPlayers <= 8) {
@@ -174,7 +174,7 @@ void Game::processInput() {
                         std::cout << "Your input is not a valid number." << std::endl;
                     }
                 }
-                std::cout << "===================================================================================" << std::endl;
+                std::cout << "================================================================================" << std::endl;
                 for (int i = 0; i < numPlayers; ++i) {
                     std::string name = "";
                     std::cout << i + 1 << "-th player: What is your name?" << std::endl;
@@ -229,31 +229,43 @@ void Game::processInput() {
                         break;
                     }
 
-                    std::cout << "-----------------------------------------------------------------------------------" << std::endl;
+                    std::cout << "--------------------------------------------------------------------------------" << std::endl;
                 }
             }
             currentPlayer = 0;
             break;
         }
         case IN_GAME: {
+            if (players[currentPlayer]->getCanBuy()) {
+                bool successInput = false;
+                while (!successInput) {
+                    if (!events->readLine()) {
+                        state = NO_GAME;
+                        return;
+                    } else {
+                        if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
+                            std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[players[currentPlayer]->getPosition()]);
+                            if (building) {
+                                unsigned int cost = building->getCost();
+                                building->setOwner(players[currentPlayer]);
+                                players[currentPlayer]->decBalance(cost);
+                                successInput = true;
+                                std::cout << players[currentPlayer]->getName() << " bought " << building->getName() << ". " << std::endl;
+                            } else {
+                                std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
+                            }
+                        } else if (events->getCommand() == "No" || events->getCommand() == "no") {
+                            successInput = true;
+                        } else {
+                            std::cout << "Please enter yes or no." << std::endl;
+                        }
+                    }
+                }
+            }
+            std::cout << "================================================================================" << std::endl;
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
             std::cout << "Please input a command" << std::endl;
-            if (mode == NORMAL_GAMEMODE) {
-                std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
-                std::cout << "           on the square they landed on." << std::endl;
-            } else if (mode == TESTING_GAMEMODE) {
-                std::cout << "    roll <die1> <die2>" << std::endl;
-            }
-            std::cout << "    next : give control to the next player." << std::endl;
-            std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
-            std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
-            std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
-            std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
-            std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
-            std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
-            std::cout << "    assets : displays the assets of the current player." << std::endl;
-            std::cout << "    all : displays the assets of every player." << std::endl;
-            std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
+           
             bool successInput = false;
             while (!successInput) {
                 if (!events->readLine()) {
@@ -295,10 +307,12 @@ void Game::processInput() {
                         for (unsigned int i = 0; i < squares.size(); i++) {
                             if (events->getArg(0) == squares[i]->getName()) {
                                 existing = true;
+                                // debugging use
                                 if (squares[i]->getType() == "Academic" ||
                                     squares[i]->getType() == "Gym" ||
                                     squares[i]->getType() == "Residence") {
-                                        std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
+                                        std::shared_ptr<Building> building;
+                                        building = std::dynamic_pointer_cast<Building>(building);
                                         players[currentPlayer]->mortgage(building);
                                         break;
                                 } else {
@@ -308,7 +322,7 @@ void Game::processInput() {
                             }
                         }
                         if (!existing) {
-                            std::cout << "Please enter a valid property name!" << std::endl;
+                            std::cout << "Please enter the correct property!" << std::endl;
                         }
                     } else if (events->getCommand() == "unmortgage") {
                         bool existing = false;
@@ -333,13 +347,47 @@ void Game::processInput() {
                     } else if (events->getCommand() == "bankrupt") {
 
                     } else if (events->getCommand() == "assets") {
-
+                        std::cout << "== Assets ======================================================================" << std::endl;
+                        std::cout << "| " << players[currentPlayer]->getName() << "(" << players[currentPlayer]->getSymbol() << ") : " << std::endl;
+                        std::cout << "| Balance: " << players[currentPlayer]->getBalance() << std::endl;
+                        std::cout << "| # of TimsCups: " << players[currentPlayer]->getTimsCups() << std::endl;
+                        std::cout << "| # of residences: " << players[currentPlayer]->getResiNum() << std::endl;
+                        std::cout << "| # of gyms: " << players[currentPlayer]->getGymNum() << std::endl;
+                        std::cout << "| Owned properties:" << std::endl;
+                        int count = 0;
+                        for (auto& square : squares) {
+                            std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                            if (building && building->getOwner() == players[currentPlayer]) {
+                                std::cout << "|    | " << building->getName() << std::endl;
+                                ++count;
+                            }
+                        }
+                        if (count == 0) {
+                            std::cout << "|    | None" << std::endl;
+                        }
+                        std::cout << "================================================================================" << std::endl;
                     } else if (events->getCommand() == "all") {
 
                     } else if (events->getCommand() == "save") {
 
                     } else {
-                        std::cout << "Please enter a valid command." << std::endl;
+                        std::cout << "Please enter a valid command:" << std::endl;
+                        if (mode == NORMAL_GAMEMODE) {
+                            std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
+                            std::cout << "           on the square they landed on." << std::endl;
+                        } else if (mode == TESTING_GAMEMODE) {
+                            std::cout << "    roll <die1> <die2>" << std::endl;
+                        }
+                        std::cout << "    next : give control to the next player." << std::endl;
+                        std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
+                        std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
+                        std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
+                        std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
+                        std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
+                        std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
+                        std::cout << "    assets : displays the assets of the current player." << std::endl;
+                        std::cout << "    all : displays the assets of every player." << std::endl;
+                        std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
                     }
                 }
             }

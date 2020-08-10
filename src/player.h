@@ -14,6 +14,7 @@ class Player {
     unsigned int asset;
 
     unsigned int owedBank;
+    bool canBuy;
     std::map<char, unsigned int> oweOtherPlayers;
 
     unsigned int numResi;
@@ -51,8 +52,14 @@ public:
     unsigned int getTimsCups() const;
 
     void setBalance(int value);
-    void AddBalance(int total);
-    void DecBalance(int total, char oweWhom);
+    void addBalance(unsigned int total);
+    void decBalance(unsigned int total);
+    void decBalance(unsigned int total, char oweWhom);
+
+    unsigned int getBalance() const;
+
+    void setCanBuy(bool value);
+    bool getCanBuy() const;
 };
 
 #endif

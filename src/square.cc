@@ -9,9 +9,10 @@ void Square::updatePlayers(std::vector<std::shared_ptr<Player>> players) {
     newPlayer = nullptr;
     for (auto &player : players) {
         if (player->getPosition() == square_pos) {
+            newPlayer = player;
             for (auto &currentPlayer : this->players) {
-                if (player != currentPlayer) {
-                    newPlayer = player;
+                if (player == currentPlayer) {
+                    newPlayer = nullptr;
                     break;
                 }
             }
