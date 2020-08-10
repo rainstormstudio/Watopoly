@@ -239,29 +239,26 @@ void Game::processInput() {
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
             std::cout << "Please input a command" << std::endl;
             if (mode == NORMAL_GAMEMODE) {
-                std::cout << "Type -help for support on the valid commands!" << std::endl;
+                std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
+                std::cout << "           on the square they landed on." << std::endl;
             } else if (mode == TESTING_GAMEMODE) {
                 std::cout << "    roll <die1> <die2>" << std::endl;
             }
+            std::cout << "    next : give control to the next player." << std::endl;
+            std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
+            std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
+            std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
+            std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
+            std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
+            std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
+            std::cout << "    assets : displays the assets of the current player." << std::endl;
+            std::cout << "    all : displays the assets of every player." << std::endl;
+            std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
             bool successInput = false;
             while (!successInput) {
                 if (!events->readLine()) {
                     state = NO_GAME;
                     break;
-                }
-                if (events->getCommand() == "-help") {
-                    std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
-                    std::cout << "           on the square they landed on." << std::endl;
-                    std::cout << "    next : give control to the next player." << std::endl;
-                    std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
-                    std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
-                    std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
-                    std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
-                    std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
-                    std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
-                    std::cout << "    assets : displays the assets of the current player." << std::endl;
-                    std::cout << "    all : displays the assets of every player." << std::endl;
-                    std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
                 } else {
                     if (events->getCommand() == "roll") {
                         if (mode == NORMAL_GAMEMODE) {
