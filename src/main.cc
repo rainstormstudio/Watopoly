@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
         if (std::string(argv[i]) == "-testing") {
             mode = TESTING_GAMEMODE;
         } else if (std::string(argv[i]) == "-load") {
-            if (i + 1 < argc) {
+            if (i + 1 < argc && argv[i + 1][0] != '-') {
                 loadfile = std::string(argv[i + 1]);
             } else {
                 std::cerr << "No filename specified." << std::endl;
