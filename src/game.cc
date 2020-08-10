@@ -290,7 +290,7 @@ void Game::processInput() {
                         
                     } else if (events->getCommand() == "improve") {
 
-                    } else if (events->getCommand() == "mortage") {
+                    } else if (events->getCommand() == "mortgage") {
                         bool existing = false;
                         for (unsigned int i = 0; i < squares.size(); i++) {
                             if (events->getArg(0) == squares[i]->getName()) {
