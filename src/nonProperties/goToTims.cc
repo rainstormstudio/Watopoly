@@ -18,7 +18,7 @@ void GoToTims::update(std::vector<std::shared_ptr<Player>> players) {
 }
 
 void GoToTims::render(std::shared_ptr<Graphics> gfx) {
-	gfx->write(name, coordinate.x, coordinate.y, 8);
+	gfx->write(name, coordinate.x, coordinate.y, 6);
 	for (unsigned int i = 0; i < players.size(); ++i) {
 		gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
 	}

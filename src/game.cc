@@ -116,7 +116,7 @@ void Game::init() {
     squares.emplace_back(std::make_shared<SLC>(17, Vec2(1, 16), "SLC"));
     squares.emplace_back(std::make_shared<Academics>(18, Vec2(1, 11), "BMH", 180, "Health", 100, 14, 70, 200, 550, 750, 950));
     squares.emplace_back(std::make_shared<Academics>(19, Vec2(1, 6), "OPT", 200, "Health", 100, 16, 80, 220, 600, 800, 1000));
-    squares.emplace_back(std::make_shared<GooseNesting>(20, Vec2(1, 1), "Goose Nesting"));
+    squares.emplace_back(std::make_shared<GooseNesting>(20, Vec2(1, 1), "Goose  Nesting"));
     squares.emplace_back(std::make_shared<Academics>(21, Vec2(10, 1), "EV1", 220, "Env",    150, 18, 90, 250, 700, 875, 1050));
     squares.emplace_back(std::make_shared<SLC>(22, Vec2(19, 1), "SLC"));
     squares.emplace_back(std::make_shared<Academics>(23, Vec2(28, 1), "EV2", 220, "Env",    150, 18, 90, 250, 700, 875, 1050));
@@ -239,26 +239,29 @@ void Game::processInput() {
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
             std::cout << "Please input a command" << std::endl;
             if (mode == NORMAL_GAMEMODE) {
-                std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
-                std::cout << "           on the square they landed on." << std::endl;
+                std::cout << "Type -help for support on the valid commands!" << std::endl;
             } else if (mode == TESTING_GAMEMODE) {
                 std::cout << "    roll <die1> <die2>" << std::endl;
             }
-            std::cout << "    next : give control to the next player." << std::endl;
-            std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
-            std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
-            std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
-            std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
-            std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
-            std::cout << "    bankrupt : blayer declares bankruptcy." << std::endl;
-            std::cout << "    assets : displays the assets of the current player." << std::endl;
-            std::cout << "    all : displays the assets of every player." << std::endl;
-            std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
             bool successInput = false;
             while (!successInput) {
                 if (!events->readLine()) {
                     state = NO_GAME;
                     break;
+                }
+                if (events->getCommand() == "-help") {
+                    std::cout << "    roll : the player rolls two dice, moves the sum of the two dice and takes action " << std::endl;
+                    std::cout << "           on the square they landed on." << std::endl;
+                    std::cout << "    next : give control to the next player." << std::endl;
+                    std::cout << "    trade <name> <give> <receive> : offers a trade to <name> with the current player " << std::endl;
+                    std::cout << "                                    offering <give> and requesting <receive>." << std::endl;
+                    std::cout << "    improve <property> buy/sell : attempts to buy or sell an improvement for property." << std::endl;
+                    std::cout << "    mortgage <property> : attempts to mortgage property." << std::endl;
+                    std::cout << "    unmortgage <property> : attempts to unmortgage property." << std::endl;
+                    std::cout << "    bankrupt : player declares bankruptcy." << std::endl;
+                    std::cout << "    assets : displays the assets of the current player." << std::endl;
+                    std::cout << "    all : displays the assets of every player." << std::endl;
+                    std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
                 } else {
                     if (events->getCommand() == "roll") {
                         if (mode == NORMAL_GAMEMODE) {
@@ -291,7 +294,27 @@ void Game::processInput() {
                     } else if (events->getCommand() == "improve") {
 
                     } else if (events->getCommand() == "mortage") {
-
+                        bool existing = false;
+                        for (unsigned int i = 0; i < squares.size(); i++) {
+                            if (events->getArg(0) == squares[i]->getName()) {
+                                existing = true;
+                                // debugging use
+                                if (squares[i]->getType() == "Academic" ||
+                                    squares[i]->getType() == "Gym" ||
+                                    squares[i]->getType() == "Residence") {
+                                        std::shared_ptr<Building> building;
+                                        building = std::dynamic_pointer_cast<Building>(building);
+                                        players[currentPlayer]->mortgage(building);
+                                        break;
+                                } else {
+                                    std::cout << "Cannot mortgage NonProperty or Academic Buildings!" << std::endl;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!existing) {
+                            std::cout << "Please enter the correct property!" << std::endl;
+                        }
                     } else if (events->getCommand() == "unmortgage") {
 
                     } else if (events->getCommand() == "bankrupt") {

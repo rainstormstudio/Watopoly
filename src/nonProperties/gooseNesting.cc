@@ -12,7 +12,7 @@ void GooseNesting::update(std::vector<std::shared_ptr<Player>> players) {
 }
 
 void GooseNesting::render(std::shared_ptr<Graphics> gfx) {
-	gfx->write(name, coordinate.x, coordinate.y, 8);
+	gfx->write(name, coordinate.x, coordinate.y, 7);
 	for (unsigned int i = 0; i < players.size(); ++i) {
 		gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
 	}
