@@ -295,12 +295,10 @@ void Game::processInput() {
                         for (unsigned int i = 0; i < squares.size(); i++) {
                             if (events->getArg(0) == squares[i]->getName()) {
                                 existing = true;
-                                // debugging use
                                 if (squares[i]->getType() == "Academic" ||
                                     squares[i]->getType() == "Gym" ||
                                     squares[i]->getType() == "Residence") {
-                                        std::shared_ptr<Building> building;
-                                        building = std::dynamic_pointer_cast<Building>(building);
+                                        std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
                                         players[currentPlayer]->mortgage(building);
                                         break;
                                 } else {
@@ -310,10 +308,28 @@ void Game::processInput() {
                             }
                         }
                         if (!existing) {
-                            std::cout << "Please enter the correct property!" << std::endl;
+                            std::cout << "Please enter a valid property name!" << std::endl;
                         }
                     } else if (events->getCommand() == "unmortgage") {
-
+                        bool existing = false;
+                        for (unsigned int i = 0; i < squares.size(); i++) {
+                            if (events->getArg(0) == squares[i]->getName()) {
+                                existing = true;
+                                if (squares[i]->getType() == "Academic" ||
+                                    squares[i]->getType() == "Gym" ||
+                                    squares[i]->getType() == "Residence") {
+                                        std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
+                                        players[currentPlayer]->unmortgage(building);
+                                        break;
+                                } else {
+                                    std::cout << "Cannot unmortgage NonProperty or Academic Buildings!" << std::endl;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!existing) {
+                            std::cout << "Please enter a valid property name!" << std::endl;
+                        }
                     } else if (events->getCommand() == "bankrupt") {
 
                     } else if (events->getCommand() == "assets") {

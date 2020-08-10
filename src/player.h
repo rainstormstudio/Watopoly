@@ -10,10 +10,10 @@ class Player {
     std::string name;
     char symbol;
     unsigned int position;
-    double balance;
-    double asset;
+    int balance;
+    unsigned int asset;
 
-    double owedBank;
+    unsigned int owedBank;
     std::map<char, unsigned int> oweOtherPlayers;
 
     unsigned int numResi;
@@ -38,8 +38,8 @@ public:
     void setResiNum(unsigned int num);
     unsigned int getResiNum() const;
 
-    double getAsset() const;
-    void changeAsset(double c);
+    unsigned int getAsset() const;
+    void changeAsset(unsigned int c);
 
     void mortgage(std::shared_ptr<Building> building);
     void unmortgage(std::shared_ptr<Building> building);
@@ -50,9 +50,9 @@ public:
     void setTimsCups(unsigned int num);
     unsigned int getTimsCups() const;
 
-    void setBalance(double value);
-    void AddBalance(double total);
-    void DecBalance(double total, char oweWhom);
+    void setBalance(int value);
+    void AddBalance(int total);
+    void DecBalance(int total, char oweWhom);
 };
 
 #endif
