@@ -20,10 +20,6 @@ unsigned int Residence::getRent() const {
     }
 }
 
-std::string Residence::getType() {
-    return "Residence";
-}
-
 void Residence::update(std::vector<std::shared_ptr<Player>> players) {
     updatePlayers(players);
     if (!owner) {

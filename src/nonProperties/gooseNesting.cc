@@ -3,10 +3,6 @@
 GooseNesting::GooseNesting(unsigned int square_pos, Vec2 coord, std::string name)
 	: NonProperty(square_pos, coord, name) {}
 
-std::string GooseNesting::getType() {
-	return "NonProperty";
-}
-
 void GooseNesting::update(std::vector<std::shared_ptr<Player>> players) {
 	updatePlayers(players);
 }

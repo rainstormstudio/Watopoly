@@ -342,13 +342,10 @@ void Game::processInput() {
                             if (events->getArg(0) == squares[i]->getName()) {
                                 existing = true;
                                 // debugging use
-                                if (squares[i]->getType() == "Academic" ||
-                                    squares[i]->getType() == "Gym" ||
-                                    squares[i]->getType() == "Residence") {
-                                        std::shared_ptr<Building> building;
-                                        building = std::dynamic_pointer_cast<Building>(building);
-                                        players[currentPlayer]->mortgage(building);
-                                        break;
+                                std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
+                                if (building) {
+                                    players[currentPlayer]->mortgage(building);
+                                    break;
                                 } else {
                                     std::cout << "Cannot mortgage NonProperty or Academic Buildings!" << std::endl;
                                     break;
@@ -363,12 +360,10 @@ void Game::processInput() {
                         for (unsigned int i = 0; i < squares.size(); i++) {
                             if (events->getArg(0) == squares[i]->getName()) {
                                 existing = true;
-                                if (squares[i]->getType() == "Academic" ||
-                                    squares[i]->getType() == "Gym" ||
-                                    squares[i]->getType() == "Residence") {
-                                        std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
-                                        players[currentPlayer]->unmortgage(building);
-                                        break;
+                                std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
+                                if (building) {
+                                    players[currentPlayer]->unmortgage(building);
+                                    break;
                                 } else {
                                     std::cout << "Cannot unmortgage NonProperty or Academic Buildings!" << std::endl;
                                     break;

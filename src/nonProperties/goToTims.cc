@@ -3,10 +3,6 @@
 GoToTims::GoToTims(unsigned int square_pos, Vec2 coord, std::string name) 
 	: NonProperty(square_pos, coord, name) {}
 
-std::string GoToTims::getType() {
-	return "NonProperty";
-}
-
 void GoToTims::update(std::vector<std::shared_ptr<Player>> players) {
 	this->players.clear();
 

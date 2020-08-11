@@ -3,10 +3,6 @@
 DCtims::DCtims(unsigned int square_pos, Vec2 coord, std::string name)
     : NonProperty(square_pos, coord, name) {}
 
-std::string DCtims::getType() {
-    return "NonProperty";
-}
-
 void DCtims::update(std::vector<std::shared_ptr<Player>> players) {
     // need to consider different cases
     this->players.clear();

@@ -60,8 +60,8 @@ void Player::mortgage(std::shared_ptr<Building> building) {
         std::cout << "Mortgage is already activated!" << std::endl;
         return;
     }
-    if (building->getType() == "Academic") {
-        std::shared_ptr<Academics> academic = std::dynamic_pointer_cast<Academics>(building);
+    std::shared_ptr<Academics> academic = std::dynamic_pointer_cast<Academics>(building);
+    if (academic) {        
         if (academic->getImprovement() != 0) {
             std::cout << "Mortgage fails! Need to sell improvements before activating mortgage!" << std::endl;
             return;

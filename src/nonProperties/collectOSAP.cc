@@ -4,10 +4,6 @@ CollectOSAP::CollectOSAP(unsigned int square_pos, Vec2 coord, std::string name)
     : NonProperty(square_pos, coord, name) {
 }
 
-std::string CollectOSAP::getType() {
-    return "NonProperty";
-}
-
 void CollectOSAP::addPlayer(std::shared_ptr<Player> initPlayer) {
     players.clear();
     players.push_back(initPlayer);

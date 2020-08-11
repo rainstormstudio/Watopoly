@@ -43,10 +43,6 @@ void Academics::update(std::vector<std::shared_ptr<Player>> players) {
     }
 }
 
-std::string Academics::getType() {
-    return "Academic";
-}
-
 void Academics::render(std::shared_ptr<Graphics> gfx) {
     gfx->write("--------", coordinate.x, coordinate.y + 1, 8);
     gfx->write(name, coordinate.x, coordinate.y + 2, 8);

@@ -25,8 +25,6 @@ public:
 
     std::string getOwnerName() override;
 
-    std::string getType() override;
-
     void update(std::vector<std::shared_ptr<Player>> players) override;
 
     void render(std::shared_ptr<Graphics> gfx) override;

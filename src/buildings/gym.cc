@@ -20,10 +20,6 @@ unsigned int Gym::getUsageFee() const {
     }
 }
 
-std::string Gym::getType() {
-    return "Gym";
-}
-
 void Gym::update(std::vector<std::shared_ptr<Player>> players) {
     updatePlayers(players);
     if (!owner) {

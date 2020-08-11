@@ -23,8 +23,6 @@ public:
     bool addImprovement();
     bool removeImprovement(); // bool so that we know whether successfully add or remove
 
-    std::string getType() override;
-    
     void update(std::vector<std::shared_ptr<Player>> players) override;
 
     void render(std::shared_ptr<Graphics> gfx) override;

@@ -39,10 +39,6 @@ std::string Building::getOwnerName() {
     return owner->getName();
 }
 
-std::string Building::getType() {
-    return "Property";
-}
-
 void Building::update(std::vector<std::shared_ptr<Player>> players) {}
 
 void Building::render(std::shared_ptr<Graphics> gfx) {}
