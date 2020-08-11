@@ -18,6 +18,6 @@ void GooseNesting::render(std::shared_ptr<Graphics> gfx) {
 	}
 	
 	for (unsigned int i = 0; i < players.size(); i++) {
-		gfx->addMsg(players[i]->getName() + " is attacked by a flock of nesting geese.");
+		gfx->addMsg(players[i]->getName() + " is attacked by a flock of nesting geese. ");
 	}
 }

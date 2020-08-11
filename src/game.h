@@ -21,6 +21,8 @@ class Game {
 
     // changes currentPlayer to the next
     void nextTurn();
+
+    void showPlayerAssets(unsigned int playerIndex) const;
     
     void buy(std::shared_ptr<Building> building);
     void auction(std::shared_ptr<Building> building);

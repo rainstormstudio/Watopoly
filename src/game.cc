@@ -13,6 +13,32 @@ void Game::nextTurn() {
     currentPlayer = (currentPlayer + 1) % players.size();
 }
 
+void Game::showPlayerAssets(unsigned int playerIndex) const {
+    if (playerIndex < 0 || playerIndex >= players.size()) {
+        std::cerr << "Invalid player index." << std::endl;
+        return;
+    }
+    std::cout << "== Assets ======================================================================" << std::endl;
+    std::cout << "| " << players[playerIndex]->getName() << "(" << players[playerIndex]->getSymbol() << ") : " << std::endl;
+    std::cout << "| Balance: " << players[playerIndex]->getBalance() << std::endl;
+    std::cout << "| # of TimsCups: " << players[playerIndex]->getTimsCups() << std::endl;
+    std::cout << "| # of residences: " << players[playerIndex]->getResiNum() << std::endl;
+    std::cout << "| # of gyms: " << players[playerIndex]->getGymNum() << std::endl;
+    std::cout << "| Owned properties:" << std::endl;
+    int count = 0;
+    for (auto& square : squares) {
+        std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+        if (building && building->getOwner() == players[playerIndex]) {
+            std::cout << "|    | " << building->getName() << std::endl;
+            ++count;
+        }
+    }
+    if (count == 0) {
+        std::cout << "|    | None" << std::endl;
+    }
+    std::cout << "================================================================================" << std::endl;
+}
+
 void Game::buy(std::shared_ptr<Building> building) {}
 void Game::auction(std::shared_ptr<Building> building) {}
 void Game::trade() {}
@@ -216,6 +242,7 @@ void Game::processInput() {
                                 if (input[0] == 'G' || input[0] == 'B' || input[0] == 'D' || input[0] == 'P' 
                                     || input[0] == 'S' || input[0] == '$' || input[0] == 'L' || input[0] == 'T') {
                                     players.emplace_back(std::make_shared<Player>(name, input[0]));
+                                    std::static_pointer_cast<CollectOSAP>(squares[0])->addPlayer(players[players.size() - 1]);
                                     successInput = true;
                                 } else {
                                     std::cout << "Please choose a character from G, B, D, P, S, $, L, T." << std::endl;
@@ -354,27 +381,11 @@ void Game::processInput() {
                     } else if (events->getCommand() == "bankrupt") {
 
                     } else if (events->getCommand() == "assets") {
-                        std::cout << "== Assets ======================================================================" << std::endl;
-                        std::cout << "| " << players[currentPlayer]->getName() << "(" << players[currentPlayer]->getSymbol() << ") : " << std::endl;
-                        std::cout << "| Balance: " << players[currentPlayer]->getBalance() << std::endl;
-                        std::cout << "| # of TimsCups: " << players[currentPlayer]->getTimsCups() << std::endl;
-                        std::cout << "| # of residences: " << players[currentPlayer]->getResiNum() << std::endl;
-                        std::cout << "| # of gyms: " << players[currentPlayer]->getGymNum() << std::endl;
-                        std::cout << "| Owned properties:" << std::endl;
-                        int count = 0;
-                        for (auto& square : squares) {
-                            std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
-                            if (building && building->getOwner() == players[currentPlayer]) {
-                                std::cout << "|    | " << building->getName() << std::endl;
-                                ++count;
-                            }
-                        }
-                        if (count == 0) {
-                            std::cout << "|    | None" << std::endl;
-                        }
-                        std::cout << "================================================================================" << std::endl;
+                        showPlayerAssets(currentPlayer);
                     } else if (events->getCommand() == "all") {
-
+                        for ( unsigned int i = 0; i < players.size(); ++i) {
+                            showPlayerAssets(i);
+                        }
                     } else if (events->getCommand() == "save") {
 
                     } else {

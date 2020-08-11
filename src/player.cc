@@ -2,7 +2,7 @@
 #include "./buildings/academicBuilding.h"
 
 Player::Player(std::string name, char symbol)
-	: name{name}, symbol{symbol}, position{0}, balance{1500}, owedBank{0}, numResi{0}, numGyms{0} {
+	: name{name}, symbol{symbol}, position{0}, balance{1500}, owedBank{0}, numResi{0}, numGyms{0}, numTimsCups{0} {
     hasRolled = false;
     isBankrupt = false;
     canBuy = false;

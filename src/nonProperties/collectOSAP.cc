@@ -8,14 +8,16 @@ std::string CollectOSAP::getType() {
     return "NonProperty";
 }
 
+void CollectOSAP::addPlayer(std::shared_ptr<Player> initPlayer) {
+    players.clear();
+    players.push_back(initPlayer);
+}
+
 void CollectOSAP::update(std::vector<std::shared_ptr<Player>> players) {
-    this->players.clear();
+    updatePlayers(players);
     unsigned int OSAPFee = 200;
-    for (unsigned int i = 0; i < players.size(); ++i) {
-        if (players[i]->getPosition() == square_pos) {
-            //players[i]->AddBalance(OSAPFee); // when player is on OSAP square, they receive $200
-            this->players.push_back(players[i]);
-        }
+    if (newPlayer) {
+        newPlayer->addBalance(OSAPFee);
     }
 }
 
@@ -24,8 +26,7 @@ void CollectOSAP::render(std::shared_ptr<Graphics> gfx) {
     for (unsigned int i = 0; i < players.size(); ++i) {
         gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
     }
-
-	for (unsigned int i = 0; i < players.size(); i++) {
-		gfx->addMsg(players[i]->getName() + " received OSAP!");
-	}
+    if (newPlayer) {
+        gfx->addMsg(newPlayer->getName() + " received 200 for OSAP fee. ");
+    }
 }
