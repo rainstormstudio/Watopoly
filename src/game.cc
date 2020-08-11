@@ -43,7 +43,7 @@ void Game::buy(std::shared_ptr<Building> building) {}
 void Game::auction(std::shared_ptr<Building> building) {}
 void Game::trade() {}
 
-void Game::saveGame() {}
+void Game::saveGame(std::string filename) {}
 void Game::loadGame(std::string filename) {
     data = nullptr;
     std::string line;
@@ -382,7 +382,11 @@ void Game::processInput() {
                             showPlayerAssets(i);
                         }
                     } else if (events->getCommand() == "save") {
-
+                        if (events->getArgs().size() > 0) {
+                            saveGame(events->getArg(0));
+                        } else {
+                            std::cout << "Please specify a filename." << std::endl;
+                        }
                     } else {
                         std::cout << "Please enter a valid command:" << std::endl;
                         if (mode == NORMAL_GAMEMODE) {

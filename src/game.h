@@ -28,7 +28,7 @@ class Game {
     void auction(std::shared_ptr<Building> building);
     void trade();
 
-    void saveGame();
+    void saveGame(std::string filename);
     void loadGame(std::string filename);
 public:
     Game(GameMode mode, std::string loadFile);
