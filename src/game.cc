@@ -342,6 +342,23 @@ void Game::processInput() {
                                     existing = true;
                                     std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(squares[i]);
                                     if (academics) {
+                                        unsigned int monopolyTotal = 0;
+                                        unsigned int monopolyOwned = 0;
+                                        for (unsigned int j = 0; j < squares.size(); ++j) {
+                                            std::shared_ptr<Academics> monopoly = std::dynamic_pointer_cast<Academics>(squares[j]);
+                                            if (monopoly) {
+                                                if (monopoly->getBlock() == academics->getBlock()) {
+                                                    ++monopolyTotal;
+                                                    if (monopoly->getOwner() == players[currentPlayer]) {
+                                                        ++monopolyOwned;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (monopolyTotal != monopolyOwned) {
+                                            std::cout << "Sorry you don't own this monopoly block: " << academics->getBlock() << "." << std::endl;
+                                            break;
+                                        }
                                         if (academics->getOwner() == players[currentPlayer]) {
                                             if (events->getArg(1) == "buy") {
                                                 if (academics->getImprovement() < 5) {
