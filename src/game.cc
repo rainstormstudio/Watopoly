@@ -335,7 +335,45 @@ void Game::processInput() {
                     } else if (events->getCommand() == "trade") {
                         
                     } else if (events->getCommand() == "improve") {
-
+                        if (events->getArgs().size() == 2) {
+                            bool existing = false;
+                            for (unsigned int i = 0; i < squares.size(); ++i) {
+                                if (events->getArg(0) == squares[i]->getName()) {
+                                    existing = true;
+                                    std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(squares[i]);
+                                    if (academics) {
+                                        if (academics->getOwner() == players[currentPlayer]) {
+                                            if (events->getArg(1) == "buy") {
+                                                if (academics->getImprovement() < 5) {
+                                                    if (players[currentPlayer]->getBalance() >= academics->getImprovementCost()) {
+                                                        players[currentPlayer]->decBalance(academics->getImprovementCost());
+                                                        academics->addImprovement();
+                                                        successInput = true;
+                                                    } else {
+                                                        std::cout << "Sorry, you don't have enough money." << std::endl;
+                                                    }
+                                                } else {
+                                                    std::cout << "This property already has all the improvements." << std::endl;
+                                                }
+                                            } else if (events->getArg(1) == "sell") {
+                                                // TODO: write sell here
+                                            } else {
+                                                std::cout << "Please input buy/sell." << std::endl;
+                                            }
+                                        } else {
+                                            std::cout << "Sorry, this property is not owned by you." << std::endl;
+                                        }
+                                    } else {
+                                        std::cout << "Cannot improve non-academics building!" << std::endl;
+                                    }
+                                }
+                            }
+                            if (!existing) {
+                                std::cout << "Not a valid square name." << std::endl;
+                            }
+                        } else {
+                            std::cout << "Please specify a property name and whether buy or sell" << std::endl;
+                        }
                     } else if (events->getCommand() == "mortgage") {
                         bool existing = false;
                         for (unsigned int i = 0; i < squares.size(); i++) {

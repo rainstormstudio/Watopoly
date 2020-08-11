@@ -44,6 +44,9 @@ void Academics::update(std::vector<std::shared_ptr<Player>> players) {
 }
 
 void Academics::render(std::shared_ptr<Graphics> gfx) {
+    for (unsigned int i = 0; i < improvement; ++i) {
+        gfx->draw('*', coordinate.x + i, coordinate.y);
+    }
     gfx->write("--------", coordinate.x, coordinate.y + 1, 8);
     gfx->write(name, coordinate.x, coordinate.y + 2, 8);
     for (unsigned int i = 0; i < players.size(); ++i) {
@@ -52,7 +55,7 @@ void Academics::render(std::shared_ptr<Graphics> gfx) {
     if (newPlayer) {
         gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
         if (newPlayer->getCanBuy()) {
-            gfx->addMsg("This property is not owned. Do you want to buy it?. (Yes/No) It worths " + std::to_string(cost) + ". ");
+            gfx->addMsg("This property is not owned. It worths " + std::to_string(cost) + ". Do you want to buy it?. (Yes/No) ");
         }
     }
 }

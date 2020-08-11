@@ -37,7 +37,7 @@ void Gym::render(std::shared_ptr<Graphics> gfx) {
     if (newPlayer) {
         gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
         if (newPlayer->getCanBuy()) {
-            gfx->addMsg("This property is not owned. Do you want to buy it?. (Yes/No) It worths " + std::to_string(cost) + ". ");
+            gfx->addMsg("This property is not owned. It worths " + std::to_string(cost) + ". Do you want to buy it?. (Yes/No) ");
         }
     }
 }
