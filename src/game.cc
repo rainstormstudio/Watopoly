@@ -22,7 +22,7 @@ void Game::showPlayerAssets(unsigned int playerIndex) const {
     }
     std::cout << "== Assets ======================================================================" << std::endl;
     std::cout << "| " << players[playerIndex]->getName() << "(" << players[playerIndex]->getSymbol() << ") : " << std::endl;
-    std::cout << "| Balance: " << players[playerIndex]->getBalance() << std::endl;
+    std::cout << "| Balance: $" << players[playerIndex]->getBalance() << std::endl;
     std::cout << "| # of TimsCups: " << players[playerIndex]->getTimsCups() << std::endl;
     std::cout << "| # of residences: " << players[playerIndex]->getResiNum() << std::endl;
     std::cout << "| # of gyms: " << players[playerIndex]->getGymNum() << std::endl;

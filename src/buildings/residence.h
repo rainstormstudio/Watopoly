@@ -4,6 +4,7 @@
 #include "../building.h"
 
 class Residence : public Building {
+    unsigned int fee;
 public:
     Residence(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost);
 

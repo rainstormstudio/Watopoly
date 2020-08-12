@@ -22,9 +22,7 @@ unsigned int Gym::getUsageFee() const {
 void Gym::update(std::vector<std::shared_ptr<Player>> players) {
     updatePlayers(players);
     if (newPlayer) {
-        std::cout << "newPlayer: " << newPlayer->getName() << std::endl;
         if (owner) {
-            std::cout << "owner: " << owner->getName() << std::endl;
             if (owner != newPlayer) {
                 fee = getUsageFee();
                 newPlayer->decBalance(fee);
@@ -48,10 +46,10 @@ void Gym::render(std::shared_ptr<Graphics> gfx) {
     if (newPlayer) {
         gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
         if (newPlayer->getCanBuy()) {
-            gfx->addMsg("This property is not owned. It worths " + std::to_string(cost) + ". Do you want to buy it?. (Yes/No) ");
+            gfx->addMsg("This property is not owned. It worths $" + std::to_string(cost) + ". Do you want to buy it?. (Yes/No) ");
         }
         if (owner && owner != newPlayer) {
-            gfx->addMsg("You paid " + owner->getName() + " " + std::to_string(fee) + " for gym usage fee. ");
+            gfx->addMsg("You paid " + owner->getName() + " $" + std::to_string(fee) + " for gym usage fee. ");
         }
     }
 }

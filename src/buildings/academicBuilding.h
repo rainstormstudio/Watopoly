@@ -8,6 +8,7 @@ class Academics : public Building {
     unsigned int improvementCost;
     unsigned int tuitions[6];
     unsigned int improvement = 0;
+    unsigned int fee;
 public:
     Academics(unsigned int square_pos, Vec2 coord, std::string name, unsigned int cost,
               std::string block, unsigned int improvementCost, 
