@@ -23,6 +23,6 @@ void CollectOSAP::render(std::shared_ptr<Graphics> gfx) {
         gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
     }
     if (newPlayer) {
-        gfx->addMsg(newPlayer->getName() + " received 200 for OSAP fee. ");
+        gfx->addMsg(newPlayer->getName() + " received $200 for OSAP fee. ");
     }
 }

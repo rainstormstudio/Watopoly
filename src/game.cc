@@ -225,6 +225,14 @@ void Game::processInput() {
                 for (unsigned int i = 0; i < data->numPlayers; ++i) {
                     players.emplace_back(std::make_shared<Player>(data->playerData[i].name, data->playerData[i].symbol));
                     players[players.size() - 1]->setPosition(data->playerData[i].position);
+                    if (data->playerData[i].position == 0) {
+                        std::shared_ptr<CollectOSAP> collectOsap = std::dynamic_pointer_cast<CollectOSAP>(squares[0]);
+                        if (collectOsap) {
+                            collectOsap->addPlayer(players[players.size() - 1]);
+                        } else {
+                            std::cerr << "Error loading data for CollectOSAP." << std::endl;
+                        }
+                    }
                     players[players.size() - 1]->setBalance(data->playerData[i].money);
                     players[players.size() - 1]->setTimsCups(data->playerData[i].timsCups);
                     // TODO: more about player ...
