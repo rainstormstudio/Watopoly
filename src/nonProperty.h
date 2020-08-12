@@ -3,6 +3,7 @@
 
 #include "square.h"
 #include "types.h"
+#include "math.h"
 
 class NonProperty : public Square {
 public:
