@@ -5,26 +5,23 @@ Square::Square(unsigned int square_pos, Vec2 coord, std::string name)
     
 }
 
-void Square::updatePlayers(std::vector<std::shared_ptr<Player>> players) {
+void Square::updatePlayers(std::vector<std::shared_ptr<Player>> mplayers) {
     newPlayer = nullptr;
-    for (auto &player : players) {
-        if (player->getPosition() == square_pos) {
-            newPlayer = player;
+    for (unsigned int i = 0; i < mplayers.size(); ++i) {
+        if (mplayers[i]->getPosition() == square_pos) {
+            newPlayer = mplayers[i];
             for (auto &currentPlayer : this->players) {
-                if (player == currentPlayer) {
+                if (mplayers[i] == currentPlayer) {
                     newPlayer = nullptr;
                     break;
                 }
             }
         }
-        if (!newPlayer) {
-            break;
-        }
     }
     this->players.clear();
-    for (unsigned int i = 0; i < players.size(); ++i) {
-        if (players[i]->getPosition() == square_pos) {
-            this->players.push_back(players[i]);
+    for (unsigned int i = 0; i < mplayers.size(); ++i) {
+        if (mplayers[i]->getPosition() == square_pos) {
+            this->players.push_back(mplayers[i]);
         }
     }
 }

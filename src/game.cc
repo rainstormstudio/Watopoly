@@ -9,8 +9,10 @@
 #include "nonPropertiesList.h"
 
 void Game::nextTurn() {
+    std::cout << "current player : " << currentPlayer << std::endl;
     players[currentPlayer]->setRolled(false);
     currentPlayer = (currentPlayer + 1) % players.size();
+    std::cout << "next turn: ... done" << std::endl; 
 }
 
 void Game::showPlayerAssets(unsigned int playerIndex) const {
@@ -151,7 +153,9 @@ void Game::loadGame(std::string filename) {
 }
 
 Game::Game(GameMode mode, std::string loadFile) : mode{mode} {
-    loadGame(loadFile);
+    if (loadFile != "") {
+        loadGame(loadFile);
+    }
     state = NO_GAME;
     currentPlayer = 0;
 }
@@ -345,7 +349,6 @@ void Game::processInput() {
                                     players[currentPlayer]->setResiNum(players[currentPlayer]->getResiNum() + 1);
                                 }
                                 successInput = true;
-                                std::cout << players[currentPlayer]->getName() << " bought " << building->getName() << ". " << std::endl;
                             } else {
                                 std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
                             }
@@ -357,6 +360,9 @@ void Game::processInput() {
                     }
                 }
                 players[currentPlayer]->setCanBuy(false);
+                if (successInput) {
+                    return;
+                }
             }
             std::cout << "================================================================================" << std::endl;
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;

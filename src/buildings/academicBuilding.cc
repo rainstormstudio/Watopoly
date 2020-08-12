@@ -54,7 +54,11 @@ void Academics::render(std::shared_ptr<Graphics> gfx) {
         gfx->draw('*', coordinate.x + i, coordinate.y);
     }
     gfx->write("--------", coordinate.x, coordinate.y + 1, 8);
-    gfx->write(name, coordinate.x, coordinate.y + 2, 8);
+    if (owner) {
+        gfx->write(name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y + 2, 8);
+    } else {
+        gfx->write(name, coordinate.x, coordinate.y + 2, 8);
+    }
     for (unsigned int i = 0; i < players.size(); ++i) {
         gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
     }

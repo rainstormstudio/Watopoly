@@ -19,7 +19,7 @@ public:
 
     void setCoordinate(int x, int y);
     
-    void updatePlayers(std::vector<std::shared_ptr<Player>> players);
+    void updatePlayers(std::vector<std::shared_ptr<Player>> mplayers);
 
     //virtual void setMortgage() = 0;
 
