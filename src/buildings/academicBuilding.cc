@@ -20,6 +20,12 @@ unsigned int Academics::getTuition(unsigned int index) const { return tuitions[i
 
 unsigned int Academics::getImprovementCost() const { return improvementCost; }
 
+void Academics::setImprovement(unsigned int value) {
+    if (0 <= value && value <= 5) {
+        improvement = value;
+    }
+}
+
 unsigned int Academics::getImprovement() const { return improvement; }
 
 bool Academics::addImprovement() {

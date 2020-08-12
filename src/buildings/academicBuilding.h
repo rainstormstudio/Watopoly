@@ -19,6 +19,7 @@ public:
     unsigned int getTuition(unsigned int index) const;
     unsigned int getImprovementCost() const;
 
+    void setImprovement(unsigned int value);
     unsigned int getImprovement() const;
     bool addImprovement();
     bool removeImprovement(); // bool so that we know whether successfully add or remove

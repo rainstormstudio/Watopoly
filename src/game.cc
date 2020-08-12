@@ -43,7 +43,46 @@ void Game::buy(std::shared_ptr<Building> building) {}
 void Game::auction(std::shared_ptr<Building> building) {}
 void Game::trade() {}
 
-void Game::saveGame(std::string filename) {}
+void Game::saveGame(std::string filename) {
+    std::ofstream outfile {filename};
+    if (outfile.is_open()) {
+        outfile << players.size() << std::endl;
+        for (unsigned int i = 0; i < players.size(); ++i) {
+            outfile << players[i]->getName() << " " 
+                    << players[i]->getSymbol() << " " 
+                    << players[i]->getTimsCups() << " " 
+                    << players[i]->getBalance() << " "
+                    << players[i]->getPosition();
+            if (players[i]->getPosition() == 10) {
+                // TODO : DC tims line;
+            }
+            outfile << std::endl;
+        }
+        for (unsigned int i = 0; i < squares.size(); ++i) {
+            std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
+            if (building) {
+                outfile << building->getName() << " ";
+                if (building->getOwner()) {
+                    outfile << building->getOwner()->getName() << " ";
+                } else {
+                    outfile << "BANK ";
+                }
+                std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(building);
+                if (academics) {
+                    outfile << academics->getImprovement() << " ";
+                } else {
+                    outfile << "0 ";
+                }
+                outfile << std::endl;
+            }
+        }
+        outfile.close();
+        std::cout << "Game saved to " << filename << std::endl;
+    } else {
+        std::cerr << "Error opening file " << filename << std::endl;
+    }
+}
+
 void Game::loadGame(std::string filename) {
     data = nullptr;
     std::string line;
@@ -58,6 +97,7 @@ void Game::loadGame(std::string filename) {
                 data->numPlayers = static_cast<unsigned int>(std::stoi(line));
             } else {
                 data = nullptr;
+                std::cerr << "Number of players is not natural number." << std::endl;
                 return;
             }
         } else {
@@ -85,6 +125,7 @@ void Game::loadGame(std::string filename) {
                     data->playerData.emplace_back(playerData);
                 } catch (...) {
                     data = nullptr;
+                    std::cerr << "Error creating player through the save data." << std::endl;
                     return;
                 }
             } else {
@@ -100,10 +141,13 @@ void Game::loadGame(std::string filename) {
                 data->buildingData.emplace_back(buildingData);
             } catch (...) {
                 data = nullptr;
+                std::cerr << "Error creating building through the save data." << std::endl;
                 return;
             }
         }
-    } 
+    } else {
+        std::cerr << "Error loading save data." << std::endl;
+    }
 }
 
 Game::Game(GameMode mode, std::string loadFile) : mode{mode} {
@@ -173,12 +217,30 @@ void Game::processInput() {
         }
         case PRE_GAME: {
             if (data) {
-                for ( unsigned int i = 0; i < data->numPlayers; ++i) {
+                std::cout << "loading save data ..." << std::endl;
+                for (unsigned int i = 0; i < data->numPlayers; ++i) {
                     players.emplace_back(std::make_shared<Player>(data->playerData[i].name, data->playerData[i].symbol));
                     players[players.size() - 1]->setPosition(data->playerData[i].position);
                     players[players.size() - 1]->setBalance(data->playerData[i].money);
                     players[players.size() - 1]->setTimsCups(data->playerData[i].timsCups);
                     // TODO: more about player ...
+                }
+                for (unsigned int i = 0; i < data->buildingData.size(); ++i) {
+                    for (unsigned int j = 0; j < squares.size(); ++j) {
+                        std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[j]);
+                        if (building && building->getName() == data->buildingData[i].name) {
+                            for (unsigned int k = 0; k < players.size(); ++k) {
+                                if (players[k]->getName() == data->buildingData[i].owner) {
+                                    building->setOwner(players[k]);
+                                    break;
+                                }
+                            }
+                            std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(building);
+                            if (academics) {
+                                academics->setImprovement(data->buildingData[i].improvements);
+                            }
+                        }
+                    }
                 }
             } else {
                 std::cout << "How many players? (1-8)" << std::endl;
