@@ -243,6 +243,14 @@ void Game::processInput() {
                             if (academics) {
                                 academics->setImprovement(data->buildingData[i].improvements);
                             }
+                            std::shared_ptr<Gym> gym = std::dynamic_pointer_cast<Gym>(building);
+                            if (gym && gym->getOwner()) {
+                                gym->getOwner()->setGymNum(gym->getOwner()->getGymNum() + 1);
+                            }
+                            std::shared_ptr<Residence> residence = std::dynamic_pointer_cast<Residence>(building);
+                            if (residence && residence->getOwner()) {
+                                residence->getOwner()->setResiNum(residence->getOwner()->getResiNum() + 1);
+                            }
                         }
                     }
                 }
