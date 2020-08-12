@@ -373,7 +373,13 @@ void Game::processInput() {
                                                     std::cout << "This property already has all the improvements." << std::endl;
                                                 }
                                             } else if (events->getArg(1) == "sell") {
-                                                // TODO: write sell here
+                                                if (academics->getImprovement() > 0) {
+                                                    players[currentPlayer]->addBalance(academics->getImprovementCost() / 2);
+                                                    academics->removeImprovement();
+                                                    successInput = true;
+                                                } else {
+                                                    std::cout << "This property has no improvements to be sold." << std::endl;
+                                                }
                                             } else {
                                                 std::cout << "Please input buy/sell." << std::endl;
                                             }
