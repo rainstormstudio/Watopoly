@@ -179,6 +179,14 @@ bool Player::getCollectGooseBonus() const {
     return collectGooseBonus;
 }
 
+void Player::setPassOSAP(bool value) {
+    passOSAP = value;
+}
+
+bool Player::getPassOSAP() const {
+    return passOSAP;
+}
+
 void Player::setCanBuy(bool value) {
     canBuy = value;
 }

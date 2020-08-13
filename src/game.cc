@@ -353,6 +353,9 @@ void Game::processInput() {
             if (std::dynamic_pointer_cast<SLC>(squares[17])->getMove() != NONE) {
                 break;
             }*/
+            if (players[currentPlayer]->getPassOSAP()) {
+                std::cout << "Passed by OSAP! Received $200!" << std::endl;
+            }
             if (players[currentPlayer]->getCollectGooseBonus()) {
                 players[currentPlayer]->addBalance(bank);
                 bank = 0;
@@ -424,7 +427,14 @@ void Game::processInput() {
                     if (events->getCommand() == "roll") {
                         if (mode == NORMAL_GAMEMODE) {
                             if (!players[currentPlayer]->rolled()) {
-                                players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + Math::rollTwoDice());
+                                unsigned int moveForward = Math::rollTwoDice();
+                                unsigned int newPosition = players[currentPlayer]->getPosition() + moveForward;
+                                players[currentPlayer]->setPosition(newPosition);
+                                // osap update;
+                                if (40-players[currentPlayer]->getPosition() < moveForward) {
+                                    players[currentPlayer]->addBalance(200);
+                                    players[currentPlayer]->setPassOSAP(true);
+                                }
                                 players[currentPlayer]->setRolled(true);
                                 successInput = true;
                             } else {
@@ -433,7 +443,13 @@ void Game::processInput() {
                         } else if (mode == TESTING_GAMEMODE) {
                             if (!players[currentPlayer]->rolled()) {
                                 if (Math::isNat(events->getArg(0)) && Math::isNat(events->getArg(1))) {
-                                    players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + std::stoi(events->getArg(0)) + std::stoi(events->getArg(1)));
+                                    unsigned int moveForward = std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
+                                    unsigned int newPosition = players[currentPlayer]->getPosition() + std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
+                                    players[currentPlayer]->setPosition(newPosition);
+                                    if (40-players[currentPlayer]->getPosition() < moveForward) {
+                                        players[currentPlayer]->setPassOSAP(true);
+                                        players[currentPlayer]->addBalance(200);
+                                    }
                                     players[currentPlayer]->setRolled(true);
                                     successInput = true;
                                 } else {

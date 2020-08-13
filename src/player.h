@@ -25,6 +25,7 @@ class Player {
     bool hasRolled;
     bool NeedToPayTuition=false;
     bool collectGooseBonus=false;
+    bool passOSAP=false;
     
 public:
     Player(std::string name, char symbol);
@@ -66,6 +67,9 @@ public:
 
     void setCollectGooseBonus(bool value);
     bool getCollectGooseBonus() const;
+
+    void setPassOSAP(bool value);
+    bool getPassOSAP() const;
 
     void setCanBuy(bool value);
     bool getCanBuy() const;
