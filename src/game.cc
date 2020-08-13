@@ -353,6 +353,11 @@ void Game::processInput() {
             if (std::dynamic_pointer_cast<SLC>(squares[17])->getMove() != NONE) {
                 break;
             }*/
+            if (players[currentPlayer]->getCollectGooseBonus()) {
+                players[currentPlayer]->addBalance(bank);
+                bank = 0;
+                players[currentPlayer]->setCollectGooseBonus(false);
+            }
             if (players[currentPlayer]->getCanBuy()) {
                 bool successInput = false;
                 while (!successInput) {
@@ -363,7 +368,12 @@ void Game::processInput() {
                         if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
                             std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[players[currentPlayer]->getPosition()]);
                             if (players[currentPlayer]->getBalance() >= building->getCost()) {
-                                players[currentPlayer]->buy(building);
+                                if (building) {
+                                    players[currentPlayer]->buy(building);
+                                    building->setOwner(players[currentPlayer]);
+                                } else {
+                                    std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
+                                }
                             } else {
                                 std::cout << "Cannot buy " << building->getName() << "! Do not have enough balance!" << std::endl;
                             }

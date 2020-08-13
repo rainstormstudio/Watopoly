@@ -18,7 +18,7 @@ class Game {
     std::vector<std::shared_ptr<Square>> squares;
     std::vector<std::shared_ptr<Player>> players;
     unsigned int currentPlayer;
-    unsigned int bank;
+    unsigned int bank = 500;
 
     // changes currentPlayer to the next
     void nextTurn();

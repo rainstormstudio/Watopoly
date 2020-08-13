@@ -171,6 +171,14 @@ int Player::payTuition(std::string option) {
     return 0;
 }
 
+void Player::setCollectGooseBonus(bool value) {
+    collectGooseBonus = value;
+}
+
+bool Player::getCollectGooseBonus() const {
+    return collectGooseBonus;
+}
+
 void Player::setCanBuy(bool value) {
     canBuy = value;
 }
@@ -180,20 +188,16 @@ bool Player::getCanBuy() const {
 }
 
 void Player::buy(std::shared_ptr<Building> building) {
-    if (building) {
-        unsigned int cost = building->getCost();
-        std::shared_ptr<Player> currentPlayer = std::make_shared<Player>(*this);
-        building->setOwner(currentPlayer);
-        balance -= cost;
-        asset += cost;
-        if (std::dynamic_pointer_cast<Gym>(building)) {
-            numGyms += 1;
-        }
-        if (std::dynamic_pointer_cast<Residence>(building)) {
-            numResi += 1;
-        }
-        std::cout << name << " has successfully bought " << building->getName() << "!" << std::endl;
-    } else {
-        std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
+    unsigned int cost = building->getCost();
+    std::shared_ptr<Player> currentPlayer = std::make_shared<Player>(*this);
+    building->setOwner(currentPlayer);
+    balance -= cost;
+    asset += cost;
+    if (std::dynamic_pointer_cast<Gym>(building)) {
+        numGyms += 1;
     }
+    if (std::dynamic_pointer_cast<Residence>(building)) {
+        numResi += 1;
+    }
+    std::cout << name << " has successfully bought " << building->getName() << "!" << std::endl;
 }

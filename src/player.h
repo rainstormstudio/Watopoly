@@ -21,9 +21,10 @@ class Player {
     unsigned int numGyms;
     unsigned int numTimsCups;
 
-    bool isBankrupt;
+    bool isBankrupt=false;
     bool hasRolled;
-    bool NeedToPayTuition;
+    bool NeedToPayTuition=false;
+    bool collectGooseBonus=false;
     
 public:
     Player(std::string name, char symbol);
@@ -62,6 +63,9 @@ public:
     void setNeedToPayTuition(bool value);
     bool getNeedToPayTuition() const;
     int payTuition(std::string option);
+
+    void setCollectGooseBonus(bool value);
+    bool getCollectGooseBonus() const;
 
     void setCanBuy(bool value);
     bool getCanBuy() const;

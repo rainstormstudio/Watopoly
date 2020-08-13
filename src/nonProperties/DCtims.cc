@@ -5,12 +5,7 @@ DCtims::DCtims(unsigned int square_pos, Vec2 coord, std::string name)
 
 void DCtims::update(std::vector<std::shared_ptr<Player>> players) {
     // need to consider different cases
-    this->players.clear();
-    for (unsigned int i = 0; i < players.size(); i++) {
-        if (players[i]->getPosition() == square_pos) {
-            this->players.push_back(players[i]);
-        }
-    }
+    updatePlayers(players);
 }
 
 void DCtims::render(std::shared_ptr<Graphics> gfx) {
