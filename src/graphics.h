@@ -27,6 +27,7 @@ public:
     void write(std::string content, int x, int y, int width);
 
     void addMsg(std::string str);
+    void resetMsg();
 };
 
 #endif

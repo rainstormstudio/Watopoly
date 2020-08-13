@@ -1,11 +1,11 @@
 #include "needlesHall.h"
 
-struct Option {
+struct NHOption {
     int deltaMoney;
     unsigned int weight;
 };
 
-const Option options[7] = {
+const NHOption options[7] = {
     {-200, 1},
     {-100, 2},
     {-50, 3},

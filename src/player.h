@@ -30,7 +30,7 @@ public:
     std::string getName() const;
     char getSymbol() const;
 
-    void setPosition(unsigned int pos);
+    void setPosition(int pos);
     unsigned int getPosition() const;
 
     void setGymNum(unsigned int num);

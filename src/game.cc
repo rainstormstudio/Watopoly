@@ -345,6 +345,10 @@ void Game::processInput() {
             break;
         }
         case IN_GAME: {
+            /*
+            if (std::dynamic_pointer_cast<SLC>(squares[17])->getMove() != NONE) {
+                break;
+            }*/
             if (players[currentPlayer]->getCanBuy()) {
                 bool successInput = false;
                 while (!successInput) {
@@ -393,7 +397,7 @@ void Game::processInput() {
                     if (events->getCommand() == "roll") {
                         if (mode == NORMAL_GAMEMODE) {
                             if (!players[currentPlayer]->rolled()) {
-                                players[currentPlayer]->setPosition((players[currentPlayer]->getPosition() + Math::rollTwoDice()) % 40);
+                                players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + Math::rollTwoDice());
                                 players[currentPlayer]->setRolled(true);
                                 successInput = true;
                             } else {
@@ -580,6 +584,58 @@ void Game::update() {
         case IN_GAME: {
             for (auto& square : squares) {
                 square->update(players);
+            }
+            gfx->resetMsg();
+            std::shared_ptr<SLC> slc1 = std::dynamic_pointer_cast<SLC>(squares[2]);
+            std::shared_ptr<SLC> slc2 = std::dynamic_pointer_cast<SLC>(squares[17]);
+            std::shared_ptr<SLC> slc3 = std::dynamic_pointer_cast<SLC>(squares[33]);
+            SLCmove moves[3];
+            moves[0] = slc1->getMove();
+            moves[1] = slc2->getMove();
+            moves[2] = slc3->getMove();
+            for (int i = 0; i < 3; ++i) {
+                if (moves[i] != NONE) {
+                    for (auto& square : squares) {
+                        square->update(players);
+                    }
+                    switch (moves[i]) {
+                        case BACK_3: {
+                            gfx->addMsg("SLC asked you to move back by 3 squares. ");
+                            break;
+                        }
+                        case BACK_2: {
+                            gfx->addMsg("SLC asked you to move back by 2 squares. ");
+                            break;
+                        }
+                        case BACK_1: {
+                            gfx->addMsg("SLC asked you to move back by 1 square. ");
+                            break;
+                        }
+                        case FORWARD_1: {
+                            gfx->addMsg("SLC asked you to move forward by 1 square. ");
+                            break;
+                        }
+                        case FORWARD_2: {
+                            gfx->addMsg("SLC asked you to move forward by 2 squares. ");
+                            break;
+                        }
+                        case FORWARD_3: {
+                            gfx->addMsg("SLC asked you to move forward by 3 squares. ");
+                            break;
+                        }
+                        case GO_TO_DCtims: {
+                            gfx->addMsg("SLC asked you to move to DC tims line. ");
+                            break;
+                        }
+                        case GO_TO_COSAP: {
+                            gfx->addMsg("SLC asked you to move to Collect OSAP. ");
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                    }
+                }
             }
             break;
         }

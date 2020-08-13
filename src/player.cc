@@ -17,7 +17,13 @@ char Player::getSymbol() const {
     return symbol;
 }
 
-void Player::setPosition(unsigned int pos) {
+void Player::setPosition(int pos) {
+    if (pos < 0) {
+        pos = 40 + pos;
+    }
+    if (pos >= 40) {
+        pos = pos % 40;
+    }
     position = pos;
 }
 

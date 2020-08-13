@@ -29,7 +29,6 @@ void Graphics::clear() {
             theDisplay[i][j] = ' ';
         }
     }
-    msg = "";
 }
 
 void Graphics::render() {
@@ -90,4 +89,8 @@ void Graphics::write(std::string content, int x, int y, int width) {
 
 void Graphics::addMsg(std::string str) {
     msg += str;
+}
+
+void Graphics::resetMsg() {
+    msg = "";
 }
