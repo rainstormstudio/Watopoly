@@ -1,8 +1,10 @@
 #include "player.h"
 #include "./buildings/academicBuilding.h"
+#include "./buildings/gym.h"
+#include "./buildings/residence.h"
 
 Player::Player(std::string name, char symbol)
-	: name{name}, symbol{symbol}, position{0}, balance{1500}, owedBank{0}, numResi{0}, numGyms{0}, numTimsCups{0} {
+	: name{name}, symbol{symbol}, position{0}, balance{1500}, asset{0}, owedBank{0}, numResi{0}, numGyms{0}, numTimsCups{0} {
     hasRolled = false;
     isBankrupt = false;
     canBuy = false;
@@ -73,7 +75,7 @@ void Player::mortgage(std::shared_ptr<Building> building) {
             return;
         }
     }
-    int mortgagedReceive = building->getCost()*0.5;
+    unsigned int mortgagedReceive = building->getCost()*0.5;
     // how to inform that no charge for other players when they pass by ?
     // decrease the asset from the current player
     asset -= building->getCost();
@@ -92,7 +94,7 @@ void Player::unmortgage(std::shared_ptr<Building> building) {
         std::cout << "Unmortgage is already activated!" << std::endl;
         return;
     }
-    int pay = building->getCost()*0.6;
+    unsigned int pay = building->getCost()*0.6;
     // how to inform that no charge for other players when they pass by ?
     // decrease the asset from the current player
     if (pay > balance) {
@@ -118,7 +120,7 @@ void Player::setTimsCups(unsigned int num) {
 
 unsigned int Player::getTimsCups() const { return numTimsCups; }
 
-void Player::setBalance(int value) {
+void Player::setBalance(unsigned int value) {
     balance = value;
 }
 
@@ -146,10 +148,52 @@ void Player::decBalance(unsigned int total, char oweWhom) {
 
 unsigned int Player::getBalance() const { return balance; }
 
+void Player::setNeedToPayTuition(bool value) {
+    NeedToPayTuition = value;
+}
+
+bool Player::getNeedToPayTuition() const {
+    return NeedToPayTuition;
+}
+
+int Player::payTuition(std::string option) {
+    if (option == "1") {
+        balance -= 300;
+        std::cout << "Successfully paid $300 tuition fees!" << std::endl;
+        return 300;
+    }
+    if (option == "2") {
+        int totalWorth = asset+balance;
+        balance -= (totalWorth*0.1);
+        std::cout << "Successfully paid $" << totalWorth*0.1 << " tuition fees!" << std::endl;
+        return totalWorth*0.1;
+    }
+    return 0;
+}
+
 void Player::setCanBuy(bool value) {
     canBuy = value;
 }
 
 bool Player::getCanBuy() const {
     return canBuy;
+}
+
+void Player::buy(std::shared_ptr<Building> building) {
+    if (building) {
+        unsigned int cost = building->getCost();
+        std::shared_ptr<Player> currentPlayer = std::make_shared<Player>(*this);
+        building->setOwner(currentPlayer);
+        balance -= cost;
+        asset += cost;
+        if (std::dynamic_pointer_cast<Gym>(building)) {
+            numGyms += 1;
+        }
+        if (std::dynamic_pointer_cast<Residence>(building)) {
+            numResi += 1;
+        }
+        std::cout << name << " has successfully bought " << building->getName() << "!" << std::endl;
+    } else {
+        std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
+    }
 }

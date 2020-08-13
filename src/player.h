@@ -10,7 +10,7 @@ class Player {
     std::string name;
     char symbol;
     unsigned int position;
-    int balance;
+    unsigned int balance;
     unsigned int asset;
 
     unsigned int owedBank;
@@ -23,6 +23,7 @@ class Player {
 
     bool isBankrupt;
     bool hasRolled;
+    bool NeedToPayTuition;
     
 public:
     Player(std::string name, char symbol);
@@ -51,15 +52,20 @@ public:
     void setTimsCups(unsigned int num);
     unsigned int getTimsCups() const;
 
-    void setBalance(int value);
+    void setBalance(unsigned int value);
     void addBalance(unsigned int total);
     void decBalance(unsigned int total);
     void decBalance(unsigned int total, char oweWhom);
 
     unsigned int getBalance() const;
 
+    void setNeedToPayTuition(bool value);
+    bool getNeedToPayTuition() const;
+    int payTuition(std::string option);
+
     void setCanBuy(bool value);
     bool getCanBuy() const;
+    void buy(std::shared_ptr<Building> building);
 };
 
 #endif

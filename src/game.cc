@@ -23,6 +23,8 @@ void Game::showPlayerAssets(unsigned int playerIndex) const {
     std::cout << "== Assets ======================================================================" << std::endl;
     std::cout << "| " << players[playerIndex]->getName() << "(" << players[playerIndex]->getSymbol() << ") : " << std::endl;
     std::cout << "| Balance: $" << players[playerIndex]->getBalance() << std::endl;
+    std::cout << "| Asset Amount: $" << players[playerIndex]->getAsset() << std::endl;
+    std::cout << "| Total Worth: $" << players[playerIndex]->getBalance()+players[playerIndex]->getAsset() << std::endl;
     std::cout << "| # of TimsCups: " << players[playerIndex]->getTimsCups() << std::endl;
     std::cout << "| # of residences: " << players[playerIndex]->getResiNum() << std::endl;
     std::cout << "| # of gyms: " << players[playerIndex]->getGymNum() << std::endl;
@@ -360,20 +362,12 @@ void Game::processInput() {
                     } else {
                         if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
                             std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[players[currentPlayer]->getPosition()]);
-                            if (building) {
-                                unsigned int cost = building->getCost();
-                                building->setOwner(players[currentPlayer]);
-                                players[currentPlayer]->decBalance(cost);
-                                if (std::dynamic_pointer_cast<Gym>(building)) {
-                                    players[currentPlayer]->setGymNum(players[currentPlayer]->getGymNum() + 1);
-                                }
-                                if (std::dynamic_pointer_cast<Residence>(building)) {
-                                    players[currentPlayer]->setResiNum(players[currentPlayer]->getResiNum() + 1);
-                                }
-                                successInput = true;
+                            if (players[currentPlayer]->getBalance() >= building->getCost()) {
+                                players[currentPlayer]->buy(building);
                             } else {
-                                std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
+                                std::cout << "Cannot buy " << building->getName() << "! Do not have enough balance!" << std::endl;
                             }
+                            successInput = true;
                         } else if (events->getCommand() == "No" || events->getCommand() == "no") {
                             successInput = true;
                         } else {
@@ -382,9 +376,30 @@ void Game::processInput() {
                     }
                 }
                 players[currentPlayer]->setCanBuy(false);
-                if (successInput) {
+                /*if (successInput) {
                     return;
+                }*/
+            }
+            if (players[currentPlayer]->getNeedToPayTuition()) {
+                bool successInput = false;
+                while (!successInput) {
+                    if (!events->readLine()) {
+                        state = NO_GAME;
+                        return;
+                    } else {
+                        if (events->getCommand() == "1" || events->getCommand() == "2") {
+                            int tuition = players[currentPlayer]->payTuition(events->getCommand());
+                            bank += tuition;
+                            successInput = true;
+                        } else {
+                            std::cout << "Please enter 1 or 2!" << std::endl;
+                        }
+                    }
                 }
+                players[currentPlayer]->setNeedToPayTuition(false);
+                /*if (successInput) {
+                    return;
+                }*/
             }
             std::cout << "================================================================================" << std::endl;
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
@@ -453,6 +468,7 @@ void Game::processInput() {
                                             if (events->getArg(1) == "buy") {
                                                 if (academics->getImprovement() < 5) {
                                                     if (players[currentPlayer]->getBalance() >= academics->getImprovementCost()) {
+                                                        players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset()+academics->getImprovementCost());
                                                         players[currentPlayer]->decBalance(academics->getImprovementCost());
                                                         academics->addImprovement();
                                                         successInput = true;
@@ -464,6 +480,7 @@ void Game::processInput() {
                                                 }
                                             } else if (events->getArg(1) == "sell") {
                                                 if (academics->getImprovement() > 0) {
+                                                    players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset()-academics->getImprovementCost());
                                                     players[currentPlayer]->addBalance(academics->getImprovementCost() / 2);
                                                     academics->removeImprovement();
                                                     successInput = true;
