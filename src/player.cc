@@ -197,8 +197,6 @@ bool Player::getCanBuy() const {
 
 void Player::buy(std::shared_ptr<Building> building) {
     unsigned int cost = building->getCost();
-    std::shared_ptr<Player> currentPlayer = std::make_shared<Player>(*this);
-    building->setOwner(currentPlayer);
     balance -= cost;
     asset += cost;
     if (std::dynamic_pointer_cast<Gym>(building)) {
