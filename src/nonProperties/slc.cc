@@ -44,7 +44,8 @@ void SLC::update(std::vector<std::shared_ptr<Player>> players) {
     updatePlayers(players);
     move = NONE;
     if (newPlayer) {
-        move = getOption();
+        //move = getOption();
+        move = FORWARD_3;
         switch (move) {
             case BACK_3: {
                 newPlayer->setPosition(square_pos - 3);

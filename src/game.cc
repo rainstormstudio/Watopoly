@@ -163,6 +163,8 @@ Game::Game(GameMode mode, std::string loadFile) : mode{mode} {
 bool Game::loop() const { return state != NO_GAME; }
 
 void Game::init() {
+    // TODO: uncomment the following line after implementation
+    //Math::initRandom();
     if (mode == TESTING_GAMEMODE) {
         std::cout << "Game initialized as Testing Mode." << std::endl;
     }
@@ -583,7 +585,16 @@ void Game::update() {
         }
         case IN_GAME: {
             for (auto& square : squares) {
-                square->update(players);
+                std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                if (building) {
+                    building->update(players);
+                }
+            }
+            for (auto& square : squares) {
+                std::shared_ptr<NonProperty> nonProperty = std::dynamic_pointer_cast<NonProperty>(square);
+                if (nonProperty) {
+                    nonProperty->update(players);
+                }
             }
             gfx->resetMsg();
             std::shared_ptr<SLC> slc1 = std::dynamic_pointer_cast<SLC>(squares[2]);
