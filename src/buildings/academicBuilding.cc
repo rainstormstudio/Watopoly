@@ -40,17 +40,20 @@ bool Academics::removeImprovement() {
     return true;
 }
 
-void Academics::update(std::vector<std::shared_ptr<Player>> players) {
+void Academics::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {
     updatePlayers(players);
     if (newPlayer) {
+        gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
         if (owner) {
             if (owner != newPlayer) {
                 fee = getTuition(improvement);
                 newPlayer->decBalance(fee);
                 owner->addBalance(fee);
+                gfx->addMsg("You paid " + owner->getName() + " $" + std::to_string(fee) + " for tuition. ");
             }
         } else {
             newPlayer->setCanBuy(true);
+            gfx->addMsg("This property is not owned. \nIt worths $" + std::to_string(cost) + ". \nDo you want to buy it?. (Yes/No) ");
         }
     }
 }
@@ -67,14 +70,5 @@ void Academics::render(std::shared_ptr<Graphics> gfx) {
     }
     for (unsigned int i = 0; i < players.size(); ++i) {
         gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
-    }
-    if (newPlayer) {
-        gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
-        if (newPlayer->getCanBuy()) {
-            gfx->addMsg("This property is not owned. It worths $" + std::to_string(cost) + ". Do you want to buy it?. (Yes/No) ");
-        }
-        if (owner && owner != newPlayer) {
-            gfx->addMsg("You paid " + owner->getName() + " $" + std::to_string(fee) + " for tuition. ");
-        }
     }
 }

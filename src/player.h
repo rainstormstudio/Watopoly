@@ -26,6 +26,8 @@ class Player {
     bool NeedToPayTuition=false;
     bool collectGooseBonus=false;
     bool passOSAP=false;
+
+    unsigned int timsTurn;
     
 public:
     Player(std::string name, char symbol);
@@ -74,6 +76,11 @@ public:
     void setCanBuy(bool value);
     bool getCanBuy() const;
     void buy(std::shared_ptr<Building> building);
+
+    void gotoTims();
+    unsigned int getTimsTurn() const;
+    void setTimsTurn(unsigned int value);
+    void resetTimsTurn();
 };
 
 #endif

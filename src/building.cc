@@ -39,7 +39,7 @@ std::string Building::getOwnerName() {
     return owner->getName();
 }
 
-void Building::update(std::vector<std::shared_ptr<Player>> players) {}
+void Building::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {}
 
 void Building::render(std::shared_ptr<Graphics> gfx) {}
 

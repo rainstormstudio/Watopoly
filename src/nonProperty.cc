@@ -13,6 +13,6 @@ std::string NonProperty::getOwnerName() {
     return "NonProperty";
 }
 
-void NonProperty::update(std::vector<std::shared_ptr<Player>> players) {}
+void NonProperty::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {}
 
 void NonProperty::render(std::shared_ptr<Graphics> gfx) {}

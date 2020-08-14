@@ -35,14 +35,28 @@ int NeedlesHall::getOption() {
     return result;
 }
 
-void NeedlesHall::update(std::vector<std::shared_ptr<Player>> players) {
+void NeedlesHall::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {
     updatePlayers(players);
     if (newPlayer) {
+        gfx->addMsg(newPlayer->getName() + " arrived at Needls Hall");
         deltaMoney = getOption();
         if (deltaMoney >= 0) {
             newPlayer->addBalance(static_cast<unsigned int>(deltaMoney));
+            gfx->addMsg(" and gained $" + std::to_string(deltaMoney) + ". \n");
         } else {
             newPlayer->decBalance(static_cast<unsigned int>(-deltaMoney));
+            gfx->addMsg(" and lost $" + std::to_string(-deltaMoney) + ". \n");
+        }
+        int pick = Math::randint(1, 100);
+        if (pick == 1) {
+            unsigned int totalTimsCups = 0;
+            for (auto& player : players) {
+                totalTimsCups += player->getTimsCups();
+            }
+            if (totalTimsCups < 4) {
+                newPlayer->setTimsCups(newPlayer->getTimsCups() + 1);
+                gfx->addMsg("Congratulations! You won a Roll Up the Rim cup.\n");
+            }
         }
     }
 }
@@ -51,14 +65,6 @@ void NeedlesHall::render(std::shared_ptr<Graphics> gfx) {
     gfx->write(name, coordinate.x, coordinate.y, 8);
     for (unsigned int i = 0; i < players.size(); ++i) {
         gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
-    }
-    if (newPlayer) {
-        gfx->addMsg(newPlayer->getName() + " arrived at Needls Hall");
-        if (deltaMoney >= 0) {
-            gfx->addMsg(" and gained $" + std::to_string(deltaMoney) + ". ");
-        } else {
-            gfx->addMsg(" and lost $" + std::to_string(-deltaMoney) + ". ");
-        }
     }
 }
 

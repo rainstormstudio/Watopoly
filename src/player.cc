@@ -9,6 +9,7 @@ Player::Player(std::string name, char symbol)
     isBankrupt = false;
     canBuy = false;
     oweOtherPlayers = std::map<char, unsigned int> { {'G',0}, {'B',0}, {'D',0}, {'P',0},{'S',0},{'$',0},{'L',0},{'T',0} };
+    timsTurn = 0;
 }
 
 std::string Player::getName() const {
@@ -206,4 +207,21 @@ void Player::buy(std::shared_ptr<Building> building) {
         numResi += 1;
     }
     std::cout << name << " has successfully bought " << building->getName() << "!" << std::endl;
+}
+
+void Player::gotoTims() {
+    position = 10;
+    timsTurn = 1;
+}
+
+void Player::setTimsTurn(unsigned int value) {
+    timsTurn = value;
+}
+
+unsigned int Player::getTimsTurn() const {
+    return timsTurn;
+}
+
+void Player::resetTimsTurn() {
+    timsTurn = 0;
 }

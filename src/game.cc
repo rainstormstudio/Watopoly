@@ -9,10 +9,8 @@
 #include "nonPropertiesList.h"
 
 void Game::nextTurn() {
-    std::cout << "current player : " << currentPlayer << std::endl;
     players[currentPlayer]->setRolled(false);
     currentPlayer = (currentPlayer + 1) % players.size();
-    std::cout << "next turn: ... done" << std::endl; 
 }
 
 void Game::showPlayerAssets(unsigned int playerIndex) const {
@@ -43,7 +41,6 @@ void Game::showPlayerAssets(unsigned int playerIndex) const {
     std::cout << "================================================================================" << std::endl;
 }
 
-void Game::buy(std::shared_ptr<Building> building) {}
 void Game::auction(std::shared_ptr<Building> building) {}
 void Game::trade() {}
 
@@ -58,7 +55,11 @@ void Game::saveGame(std::string filename) {
                     << players[i]->getBalance() << " "
                     << players[i]->getPosition();
             if (players[i]->getPosition() == 10) {
-                // TODO : DC tims line;
+                if (players[i]->getTimsTurn() == 0) {
+                    outfile << "0";
+                } else {
+                    outfile << "1 " << players[i]->getTimsTurn();
+                }
             }
             outfile << std::endl;
         }
@@ -165,8 +166,7 @@ Game::Game(GameMode mode, std::string loadFile) : mode{mode} {
 bool Game::loop() const { return state != NO_GAME; }
 
 void Game::init() {
-    // TODO: uncomment the following line after implementation
-    //Math::initRandom();
+    Math::initRandom();
     if (mode == TESTING_GAMEMODE) {
         std::cout << "Game initialized as Testing Mode." << std::endl;
     }
@@ -239,7 +239,9 @@ void Game::processInput() {
                     }
                     players[players.size() - 1]->setBalance(data->playerData[i].money);
                     players[players.size() - 1]->setTimsCups(data->playerData[i].timsCups);
-                    // TODO: more about player ...
+                    if (data->playerData[i].isInDCTims) {
+                        players[players.size() - 1]->setTimsTurn(data->playerData[i].DCturns);
+                    }
                 }
                 for (unsigned int i = 0; i < data->buildingData.size(); ++i) {
                     for (unsigned int j = 0; j < squares.size(); ++j) {
@@ -349,10 +351,92 @@ void Game::processInput() {
             break;
         }
         case IN_GAME: {
-            /*
-            if (std::dynamic_pointer_cast<SLC>(squares[17])->getMove() != NONE) {
-                break;
-            }*/
+            if (players[currentPlayer]->getTimsTurn() > 0) {
+                bool successInput = false;
+                int firstRoll = 0;
+                int secondRoll = 0;
+                while (!successInput) {
+                    if (!events->readLine()) {
+                        state = NO_GAME;
+                        return;
+                    } else {
+                        if (events->getCommand() == "1") {
+                            if (players[currentPlayer]->getTimsTurn() < 3) {
+                                successInput = true;
+                                firstRoll = Math::rollDice();
+                                secondRoll = Math::rollDice();
+                                std::cout << "Your first roll is " << firstRoll << std::endl;
+                                std::cout << "Your second roll is " << secondRoll << std::endl;
+                                if (firstRoll == secondRoll) {
+                                    std::cout << "Congratulations! You got doubles!" << std::endl;
+                                    std::cout << "You left DC Tims line." << std::endl;
+                                    players[currentPlayer]->resetTimsTurn();
+                                } else {
+                                    std::cout << "Sorry you have to stay at DC Tims line." << std::endl;
+                                }
+                            } else if (players[currentPlayer]->getTimsTurn() == 3) {
+                                firstRoll = Math::rollDice();
+                                secondRoll = Math::rollDice();
+                                std::cout << "Your first roll is " << firstRoll << std::endl;
+                                std::cout << "Your second roll is " << secondRoll << std::endl;
+                                if (firstRoll == secondRoll) {
+                                    successInput = true;
+                                    std::cout << "Congratulations! You got doubles!" << std::endl;
+                                    std::cout << "You left DC Tims line." << std::endl;
+                                    players[currentPlayer]->resetTimsTurn();
+                                    players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + firstRoll + secondRoll);
+                                    players[currentPlayer]->setRolled(true);
+                                } else {
+                                    std::cout << "Sorry you must choose other options to leave the line." << std::endl;
+                                    players[currentPlayer]->setTimsTurn(4);
+                                }
+                            } else {
+                                std::cout << "You must choose other options to leave the line." << std::endl;
+                            }
+                        } else if (events->getCommand() == "2") {
+                            if (players[currentPlayer]->getBalance() >= 50) {
+                                successInput = true;
+                                players[currentPlayer]->decBalance(50);
+                                bool needUpdate = false;
+                                if (players[currentPlayer]->getTimsTurn() == 4) {
+                                    needUpdate = true;
+                                    players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + firstRoll + secondRoll);
+                                }
+                                players[currentPlayer]->resetTimsTurn();
+                                std::cout << "You paid $50 and you left DC Tims line." << std::endl;
+                                if (needUpdate) {
+                                    return;
+                                }
+                            } else {
+                                std::cout << "Sorry you don't have enough money! Please choose other options." << std::endl;
+                            }
+                        } else if (events->getCommand() == "3") {
+                            if (players[currentPlayer]->getTimsCups() > 0) {
+                                successInput = true;
+                                players[currentPlayer]->setTimsCups(players[currentPlayer]->getTimsCups() - 1);
+                                bool needUpdate = false;
+                                if (players[currentPlayer]->getTimsTurn() == 4) {
+                                    needUpdate = true;
+                                    players[currentPlayer]->setPosition(players[currentPlayer]->getPosition() + firstRoll + secondRoll);
+                                }
+                                players[currentPlayer]->resetTimsTurn();
+                                std::cout << "You used one Roll Up the Rim cup and you left DC Tims line." << std::endl;
+                                if (needUpdate) {
+                                    return;
+                                }
+                            } else {
+                                std::cout << "Sorry you don't have enough Roll Up the Rim cup." << std::endl;
+                            }
+                        } else {
+                            std::cout << "Please enter 1/2/3." << std::endl;
+                        }
+                    }
+                }
+                
+            }
+            if (players[currentPlayer]->getTimsTurn() > 0) {
+                players[currentPlayer]->setTimsTurn(players[currentPlayer]->getTimsTurn() + 1);
+            }
             if (players[currentPlayer]->getPassOSAP()) {
                 std::cout << "Passed by OSAP! Received $200!" << std::endl;
             }
@@ -389,9 +473,6 @@ void Game::processInput() {
                     }
                 }
                 players[currentPlayer]->setCanBuy(false);
-                /*if (successInput) {
-                    return;
-                }*/
             }
             if (players[currentPlayer]->getNeedToPayTuition()) {
                 bool successInput = false;
@@ -425,6 +506,10 @@ void Game::processInput() {
                     break;
                 } else {
                     if (events->getCommand() == "roll") {
+                        if (players[currentPlayer]->getTimsTurn() > 0) {
+                            std::cout << "Sorry you are in DC Tims line and you cannot leave yet." << std::endl;
+                            continue;
+                        }
                         if (mode == NORMAL_GAMEMODE) {
                             if (!players[currentPlayer]->rolled()) {
                                 unsigned int moveForward = Math::rollTwoDice();
@@ -460,7 +545,6 @@ void Game::processInput() {
                             }
                         }
                     } else if (events->getCommand() == "next") {
-                        // TODO : add checks
                         nextTurn();
                         successInput = true;
                     } else if (events->getCommand() == "trade") {
@@ -621,25 +705,32 @@ void Game::update() {
         }
         case PRE_GAME: {
             for (auto& square : squares) {
-                square->update(players);
+                square->update(players, gfx);
             }
             state = IN_GAME;
             break;
         }
         case IN_GAME: {
+            gfx->resetMsg();
             for (auto& square : squares) {
                 std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
                 if (building) {
-                    building->update(players);
+                    building->update(players, gfx);
                 }
             }
             for (auto& square : squares) {
-                std::shared_ptr<NonProperty> nonProperty = std::dynamic_pointer_cast<NonProperty>(square);
-                if (nonProperty) {
-                    nonProperty->update(players);
+                std::shared_ptr<DCtims> dctims = std::dynamic_pointer_cast<DCtims>(square);
+                if (!dctims) {
+                    square->update(players, gfx);
                 }
             }
-            gfx->resetMsg();
+            for (auto& square : squares) {
+                std::shared_ptr<DCtims> dctims = std::dynamic_pointer_cast<DCtims>(square);
+                if (dctims) {
+                    dctims->setCurrentPlayer(currentPlayer);
+                    dctims->update(players, gfx);
+                }
+            }
             std::shared_ptr<SLC> slc1 = std::dynamic_pointer_cast<SLC>(squares[2]);
             std::shared_ptr<SLC> slc2 = std::dynamic_pointer_cast<SLC>(squares[17]);
             std::shared_ptr<SLC> slc3 = std::dynamic_pointer_cast<SLC>(squares[33]);
@@ -650,45 +741,9 @@ void Game::update() {
             for (int i = 0; i < 3; ++i) {
                 if (moves[i] != NONE) {
                     for (auto& square : squares) {
-                        square->update(players);
+                        square->update(players, gfx);
                     }
-                    switch (moves[i]) {
-                        case BACK_3: {
-                            gfx->addMsg("SLC asked you to move back by 3 squares. ");
-                            break;
-                        }
-                        case BACK_2: {
-                            gfx->addMsg("SLC asked you to move back by 2 squares. ");
-                            break;
-                        }
-                        case BACK_1: {
-                            gfx->addMsg("SLC asked you to move back by 1 square. ");
-                            break;
-                        }
-                        case FORWARD_1: {
-                            gfx->addMsg("SLC asked you to move forward by 1 square. ");
-                            break;
-                        }
-                        case FORWARD_2: {
-                            gfx->addMsg("SLC asked you to move forward by 2 squares. ");
-                            break;
-                        }
-                        case FORWARD_3: {
-                            gfx->addMsg("SLC asked you to move forward by 3 squares. ");
-                            break;
-                        }
-                        case GO_TO_DCtims: {
-                            gfx->addMsg("SLC asked you to move to DC tims line. ");
-                            break;
-                        }
-                        case GO_TO_COSAP: {
-                            gfx->addMsg("SLC asked you to move to Collect OSAP. ");
-                            break;
-                        }
-                        default: {
-                            break;
-                        }
-                    }
+                    break;
                 }
             }
             break;
@@ -722,7 +777,6 @@ void Game::render() {
                 square->render(gfx);
             }
             gfx->render();
-
             break;
         }
         case WON_GAME: {

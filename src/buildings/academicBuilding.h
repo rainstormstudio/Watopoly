@@ -25,7 +25,7 @@ public:
     bool addImprovement();
     bool removeImprovement(); // bool so that we know whether successfully add or remove
 
-    void update(std::vector<std::shared_ptr<Player>> players) override;
+    void update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) override;
 
     void render(std::shared_ptr<Graphics> gfx) override;
 };

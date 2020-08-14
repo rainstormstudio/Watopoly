@@ -40,43 +40,63 @@ SLCmove SLC::getMove() const {
     return move;
 }
 
-void SLC::update(std::vector<std::shared_ptr<Player>> players) {
+void SLC::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {
     updatePlayers(players);
     move = NONE;
     if (newPlayer) {
+        int pick = Math::randint(1, 100);
+        if (pick == 1) {
+            unsigned int totalTimsCups = 0;
+            for (auto& player : players) {
+                totalTimsCups += player->getTimsCups();
+            }
+            if (totalTimsCups < 4) {
+                newPlayer->setTimsCups(newPlayer->getTimsCups() + 1);
+                gfx->addMsg("Congratulations! You won a Roll Up the Rim cup.\n");
+            }
+        }
+        // TODO: uncomment the following line
         //move = getOption();
-        move = FORWARD_3;
+        move = GO_TO_DCtims;
         switch (move) {
             case BACK_3: {
                 newPlayer->setPosition(square_pos - 3);
+                gfx->addMsg("SLC asked you to move back by 3 squares. ");
                 break;
             }
             case BACK_2: {
                 newPlayer->setPosition(square_pos - 2);
+                gfx->addMsg("SLC asked you to move back by 2 squares. ");
                 break;
             }
             case BACK_1: {
                 newPlayer->setPosition(square_pos - 1);
+                gfx->addMsg("SLC asked you to move back by 1 squares. ");
                 break;
             }
             case FORWARD_1: {
                 newPlayer->setPosition(square_pos + 1);
+                gfx->addMsg("SLC asked you to move forward by 1 square. ");
                 break;
             }
             case FORWARD_2: {
                 newPlayer->setPosition(square_pos + 2);
+                gfx->addMsg("SLC asked you to move forward by 2 square. ");
                 break;
             }
             case FORWARD_3: {
                 newPlayer->setPosition(square_pos + 3);
+                gfx->addMsg("SLC asked you to move forward by 3 square. ");
                 break;
             }
             case GO_TO_DCtims: {
-                newPlayer->setPosition(10);
+                newPlayer->gotoTims();
+                gfx->addMsg("SLC asked you to move to DC tims line. ");
                 break;
             }
             case GO_TO_COSAP: {
                 newPlayer->setPosition(0);
+                gfx->addMsg("SLC asked you to move to Collect OSAP. ");
                 break;
             }
             default: {
@@ -88,43 +108,6 @@ void SLC::update(std::vector<std::shared_ptr<Player>> players) {
 
 void SLC::render(std::shared_ptr<Graphics> gfx) {
     gfx->write(name, coordinate.x, coordinate.y, 8);
-    switch (move) {
-            case BACK_3: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to move back by 3 squares. ");
-                break;
-            }
-            case BACK_2: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to move back by 2 squares. ");
-                break;
-            }
-            case BACK_1: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to move back by 1 squares. ");
-                break;
-            }
-            case FORWARD_1: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to move forward by 1 squares. ");
-                break;
-            }
-            case FORWARD_2: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to move forward by 2 squares. ");
-                break;
-            }
-            case FORWARD_3: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to move forward by 3 squares. ");
-                break;
-            }
-            case GO_TO_DCtims: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to go to DC tims line. ");
-                break;
-            }
-            case GO_TO_COSAP: {
-                gfx->addMsg(newPlayer->getName() + " arrived at SLC and was asked to go to Collect OSAP. ");
-                break;
-            }
-            default: {
-                break;
-            }
-    }
 }
 
 

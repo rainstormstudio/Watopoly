@@ -25,7 +25,6 @@ class Game {
 
     void showPlayerAssets(unsigned int playerIndex) const;
     
-    void buy(std::shared_ptr<Building> building);
     void auction(std::shared_ptr<Building> building);
     void trade();
 
