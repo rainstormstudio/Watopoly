@@ -8,6 +8,23 @@
 #include "nonProperty.h"
 #include "nonPropertiesList.h"
 
+bool Game::monopolyHasImprovement(std::shared_ptr<Building> building) {
+    std::shared_ptr<Academics> monopoly = std::dynamic_pointer_cast<Academics>(building);
+    if (!monopoly) {
+        return false;
+    }
+    std::string block = monopoly->getBlock();
+    bool result = false;
+    for (auto& square : squares) {
+        std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(square);
+        if (academics && academics->getBlock() == block && academics->getImprovement() > 0) {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
 void Game::nextTurn() {
     players[currentPlayer]->setRolled(false);
     currentPlayer = (currentPlayer + 1) % players.size();
@@ -42,7 +59,174 @@ void Game::showPlayerAssets(unsigned int playerIndex) const {
 }
 
 void Game::auction(std::shared_ptr<Building> building) {}
-void Game::trade() {}
+void Game::trade() {
+    if (Math::isNat(events->getArg(0))) {
+        std::cout << "You should input a player's name for the first argument." << std::endl;
+    } else {
+        unsigned int target = 0;
+        for (unsigned int target = 0; target < players.size(); ++target) {
+            if (players[target]->getName() == events->getArg(0)) {
+                break;
+            }
+        }
+        if (target == currentPlayer) {
+            std::cout << "Sorry you cannot trade with yourself." << std::endl;
+        } else if (target == players.size()) {
+            std::cout << "Sorry the player with that name does not exist." << std::endl;
+        } else {
+            if (Math::isNat(events->getArg(1)) && Math::isNat(events->getArg(2))) {
+                std::cout << "Sorry you cannot trade money with money" << std::endl;
+            } else if (Math::isNat(events->getArg(1))) {
+                if (players[currentPlayer]->getBalance() < static_cast<unsigned int>(std::stoi(events->getArg(1)))) {
+                    std::cout << "Sorry you do not have that much money" << std::endl;
+                    return;
+                }
+                std::shared_ptr<Building> receive = nullptr;
+                for (auto& square : squares) {
+                    std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                    if (building && building->getName() == events->getArg(2)) {
+                        receive = building;
+                        break;
+                    }
+                }
+                if (!receive) {
+                    std::cout << "Sorry that is not a valid building name." << std::endl;
+                } else if (receive->getOwner() != players[target]) {
+                    std::cout << "Sorry " << players[target]->getName() << " does not own that building." << std::endl;
+                } else if (monopolyHasImprovement(receive)) {
+                    std::cout << "Sorry certain building in that monopoly has improvements." << std::endl;
+                } else {
+                    std::cout << players[target]->getName() << ", " << players[currentPlayer]->getName() 
+                        << " wants to give you $" << events->getArg(1) << " in exchange for your " << receive->getName() << "." << std::endl;
+                    std::cout << "Do you accept that? (Yes/No): " << std::endl;
+                    bool successInput = false;
+                    while (!successInput) {
+                        if (!events->readLine()) {
+                            state = NO_GAME;
+                            return;
+                        } else {
+                            if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
+                                successInput = true;
+                                receive->setOwner(players[currentPlayer]);
+                                players[currentPlayer]->decBalance(std::stoi(events->getArg(1)));
+                                players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() + receive->getCost());
+                                players[target]->changeAsset(players[target]->getAsset() - receive->getCost());
+                            } else if (events->getCommand() == "No" || events->getCommand() == "no") {
+                                successInput = true;
+                            } else {
+                                std::cout << "Please enter yes or no." << std::endl;
+                            }
+                        }
+                    }
+                }
+            } else if (Math::isNat(events->getArg(2))) {
+                if (players[target]->getBalance() < static_cast<unsigned int>(std::stoi(events->getArg(2)))) {
+                    std::cout << "Sorry " << players[target]->getName() << " does not have that much money." << std::endl;
+                    return;
+                }
+                std::shared_ptr<Building> give = nullptr;
+                for (auto& square : squares) {
+                    std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                    if (building && building->getName() == events->getArg(1)) {
+                        give = building;
+                        break;
+                    }
+                }
+                if (!give) {
+                    std::cout << "Sorry that is not a valid building name." << std::endl;
+                } else if (give->getOwner() != players[currentPlayer]) {
+                    std::cout << "Sorry you not own that building." << std::endl;
+                } else if (monopolyHasImprovement(give)) {
+                    std::cout << "Sorry certain building in that monopoly has improvements." << std::endl;
+                } else {
+                    std::cout << players[target]->getName() << ", " << players[currentPlayer]->getName()
+                        << "wants to give you " << give->getName() << " in exchange for your $" << events->getArg(2);
+                    std::cout << "Do you accept that? (Yes/No): " << std::endl;
+                    bool successInput = false;
+                    while (!successInput) {
+                        if (!events->readLine()) {
+                            state = NO_GAME;
+                            return;
+                        } else {
+                            if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
+                                successInput = true;
+                                give->setOwner(players[target]);
+                                players[target]->decBalance(std::stoi(events->getArg(2)));
+                                players[target]->changeAsset(players[target]->getAsset() + give->getCost());
+                                players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() - give->getCost());
+                            } else if (events->getCommand() == "No" || events->getCommand() == "no") {
+                                successInput = true;
+                            } else {
+                                std::cout << "Please enter yes or no." << std::endl;
+                            }
+                        }
+                    }
+                }
+            } else {
+                std::shared_ptr<Building> give = nullptr;
+                for (auto& square : squares) {
+                    std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                    if (building && building->getName() == events->getArg(1)) {
+                        give = building;
+                        break;
+                    }
+                }
+                if (!give) {
+                    std::cout << "Sorry " << events->getArg(1) << " is not a valid building name." << std::endl;
+                    return;
+                } else if (monopolyHasImprovement(give)) {
+                    std::cout << "Sorry " << give->getName() << "'s monopoly has improvements." << std::endl;
+                    return;
+                } else if (give->getOwner() != players[currentPlayer]) {
+                    std::cout << "Sorry you do not own that building." << std::endl;
+                    return;
+                }
+                std::shared_ptr<Building> receive = nullptr;
+                for (auto& square : squares) {
+                    std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                    if (building && building->getName() == events->getArg(2)) {
+                        receive = building;
+                        break;
+                    }
+                }
+                if (!receive) {
+                    std::cout << "Sorry " << events->getArg(2) << " is not a valid building name." << std::endl;
+                    return;
+                } else if (monopolyHasImprovement(receive)) {
+                    std::cout << "Sorry " << receive->getName() << "'s monopoly has improvements." << std::endl;
+                    return;
+                } else if (receive->getOwner() != players[target]) {
+                    std::cout << "Sorry " << players[target]->getName() << " does not own that building." << std::endl;
+                    return;
+                }
+                std::cout << players[target]->getName() << ", " << players[currentPlayer]->getName() 
+                        << " wants to give you " << events->getArg(1) << " in exchange for your " << receive->getName() << "." << std::endl;
+                std::cout << "Do you accept that? (Yes/No): " << std::endl;
+                bool successInput = false;
+                while (!successInput) {
+                        if (!events->readLine()) {
+                            state = NO_GAME;
+                            return;
+                        } else {
+                            if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
+                                successInput = true;
+                                receive->setOwner(players[currentPlayer]);
+                                give->setOwner(players[target]);
+                                players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() + receive->getCost());
+                                players[target]->changeAsset(players[target]->getAsset() - receive->getCost());
+                                players[target]->changeAsset(players[target]->getAsset() + give->getCost());
+                                players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() - give->getCost());
+                            } else if (events->getCommand() == "No" || events->getCommand() == "no") {
+                                successInput = true;
+                            } else {
+                                std::cout << "Please enter yes or no." << std::endl;
+                            }
+                        }
+                }
+            }
+        }
+    }
+}
 
 void Game::saveGame(std::string filename) {
     std::ofstream outfile {filename};
@@ -458,6 +642,8 @@ void Game::processInput() {
                                 if (building) {
                                     players[currentPlayer]->buy(building);
                                     building->setOwner(players[currentPlayer]);
+                                    gfx->addMsg(players[currentPlayer]->getName() + " bought " + building->getName() + ". ");
+                                    render();
                                 } else {
                                     std::cout << "Error: current property is not a Building type." << std::endl; // only for debugging
                                 }
@@ -548,7 +734,8 @@ void Game::processInput() {
                         nextTurn();
                         successInput = true;
                     } else if (events->getCommand() == "trade") {
-                        
+                        trade();
+                        successInput = true;
                     } else if (events->getCommand() == "improve") {
                         if (events->getArgs().size() == 2) {
                             bool existing = false;

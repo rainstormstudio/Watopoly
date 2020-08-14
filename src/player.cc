@@ -52,7 +52,7 @@ unsigned int Player::getResiNum() const {
 
 unsigned int Player::getAsset() const { return asset; }
 
-void Player::changeAsset(unsigned c) { asset = c; }
+void Player::changeAsset(unsigned int c) { asset = c; }
 
 void Player::mortgage(std::shared_ptr<Building> building) {
     // debugging used
@@ -206,7 +206,6 @@ void Player::buy(std::shared_ptr<Building> building) {
     if (std::dynamic_pointer_cast<Residence>(building)) {
         numResi += 1;
     }
-    std::cout << name << " has successfully bought " << building->getName() << "!" << std::endl;
 }
 
 void Player::gotoTims() {
