@@ -528,15 +528,20 @@ void Game::processInput() {
                     for (unsigned int j = 0; j < squares.size(); ++j) {
                         std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[j]);
                         if (building && building->getName() == data->buildingData[i].name) {
-                            for (unsigned int k = 0; k < players.size(); ++k) {
+                            unsigned int k = 0;
+                            for (k = 0; k < players.size(); ++k) {
                                 if (players[k]->getName() == data->buildingData[i].owner) {
                                     building->setOwner(players[k]);
+                                    players[k]->changeAsset(players[k]->getAsset() + building->getCost());
                                     break;
                                 }
                             }
                             std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(building);
                             if (academics) {
                                 academics->setImprovement(data->buildingData[i].improvements);
+                                if (k < players.size()) {
+                                    players[k]->changeAsset(players[k]->getAsset() + academics->getImprovementCost() * academics->getImprovement());
+                                }
                             }
                             std::shared_ptr<Gym> gym = std::dynamic_pointer_cast<Gym>(building);
                             if (gym && gym->getOwner()) {
