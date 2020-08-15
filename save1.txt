@@ -1,11 +1,11 @@
 2
-Daniel G 0 1202 3
-Peter B 0 1498 1
-AL Daniel 0 
-ML Daniel 4 
-MKV BANK 0 
-ECH BANK 0 
-PAS BANK 0 
+Daniel G 0 1200 3
+Peter B 0 100 1
+AL Daniel 5 
+ML Daniel 5 
+MKV Daniel 0 
+ECH Daniel 5 
+PAS Peter 0 
 HH BANK 0 
 RCH BANK 0 
 PAC BANK 0 
