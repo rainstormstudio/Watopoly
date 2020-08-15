@@ -13,15 +13,16 @@ class Player {
     unsigned int balance;
     unsigned int asset;
 
-    unsigned int owedBank;
+    unsigned int owedMoney;
     bool canBuy;
-    std::map<char, unsigned int> oweOtherPlayers;
+    std::shared_ptr<Player> owedPlayer;
 
     unsigned int numResi;
     unsigned int numGyms;
     unsigned int numTimsCups;
 
     bool isBankrupt = false;
+    bool willBankrupt = false;
     bool hasRolled;
     bool NeedToPayTuition = false;
     bool collectGooseBonus = false;
@@ -58,8 +59,7 @@ public:
 
     void setBalance(unsigned int value);
     void addBalance(unsigned int total);
-    void decBalance(unsigned int total);
-    void decBalance(unsigned int total, char oweWhom);
+    void decBalance(unsigned int total, std::shared_ptr<Player> owedPlayer);
 
     unsigned int getBalance() const;
 
@@ -81,6 +81,16 @@ public:
     unsigned int getTimsTurn() const;
     void setTimsTurn(unsigned int value);
     void resetTimsTurn();
+
+    bool getBankruptcy() const;
+    void setBankruptcy(bool value);
+
+    bool getWillBankrupt() const;
+    void setWillBankrupt(bool value);
+
+    std::shared_ptr<Player> getOwedPlayer() const;
+    unsigned int getOwedMoney() const;
+    void setOwedMoney(unsigned int value);
 };
 
 #endif

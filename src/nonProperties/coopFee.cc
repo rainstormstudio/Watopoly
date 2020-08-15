@@ -6,7 +6,7 @@ CoopFee::CoopFee(unsigned int square_pos, Vec2 coord, std::string name)
 void CoopFee::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {
     updatePlayers(players);
     if (newPlayer) {
-        newPlayer->decBalance(150);
+        newPlayer->decBalance(150, nullptr);
         gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". \n");
         gfx->addMsg("You paid $150 for coop fee. ");
     }

@@ -44,7 +44,7 @@ void NeedlesHall::update(std::vector<std::shared_ptr<Player>> players, std::shar
             newPlayer->addBalance(static_cast<unsigned int>(deltaMoney));
             gfx->addMsg(" and gained $" + std::to_string(deltaMoney) + ". \n");
         } else {
-            newPlayer->decBalance(static_cast<unsigned int>(-deltaMoney));
+            newPlayer->decBalance(static_cast<unsigned int>(-deltaMoney), nullptr);
             gfx->addMsg(" and lost $" + std::to_string(-deltaMoney) + ". \n");
         }
         int pick = Math::randint(1, 100);

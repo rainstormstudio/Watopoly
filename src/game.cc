@@ -28,7 +28,18 @@ bool Game::monopolyHasImprovement(std::shared_ptr<Building> building) {
 void Game::nextTurn() {
     rollNum = 0;
     players[currentPlayer]->setRolled(false);
-    currentPlayer = (currentPlayer + 1) % players.size();
+    if (players[currentPlayer]->getBankruptcy()) {
+        players.erase(players.begin() + currentPlayer);
+        players.shrink_to_fit();
+        if (currentPlayer == players.size()) {
+            currentPlayer = 0;
+        }
+    } else {
+        currentPlayer = (currentPlayer + 1) % players.size();
+    }
+    if (players.size() == 1) {
+        state = WON_GAME;
+    }
 }
 
 void Game::showPlayerAssets(unsigned int playerIndex) const {
@@ -60,6 +71,7 @@ void Game::showPlayerAssets(unsigned int playerIndex) const {
 }
 
 void Game::auction(std::shared_ptr<Building> building) {
+    std::cout << "--------------------------------------------------------------------------------" << std::endl;
     std::cout << "Start auction for " << building->getName() << "!" << std::endl;
     unsigned int maxBid = 0;
     unsigned int maxBidPlayer = currentPlayer;
@@ -67,12 +79,17 @@ void Game::auction(std::shared_ptr<Building> building) {
     unsigned int numAuctionPlayers = players.size();
     unsigned int currentAuctionPlayer = currentPlayer;
     for (unsigned int i = 0; i < players.size(); ++i) {
-        auctionPlayers[i] = true;
+        if (players[i]->getBankruptcy()) {
+            auctionPlayers[i] = false;
+        } else {
+            auctionPlayers[i] = true;
+        }
     }
     while (numAuctionPlayers != 1) {
         do {
             currentAuctionPlayer = (currentAuctionPlayer + 1) % players.size();
         } while (!auctionPlayers[currentAuctionPlayer]);
+        std::cout << "--------------------------------------------------------------------------------" << std::endl;
         std::cout << "Now is " << players[currentAuctionPlayer]->getName() << "'s turn to bid." << std::endl;
         std::cout << "The current bid is $" << maxBid << "." << std::endl;
         std::cout << "Your options are:" << std::endl;
@@ -116,7 +133,7 @@ void Game::auction(std::shared_ptr<Building> building) {
         }
     }
     building->setOwner(players[maxBidPlayer]);
-    players[maxBidPlayer]->decBalance(maxBid);
+    players[maxBidPlayer]->decBalance(maxBid, nullptr);
     render();
     std::cout << "Summary of auction:" << std::endl;
     std::cout << building->getName() << " was bought by " << players[maxBidPlayer]->getName() << " with $" << maxBid << "." << std::endl;
@@ -171,7 +188,7 @@ void Game::trade() {
                             if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
                                 successInput = true;
                                 receive->setOwner(players[currentPlayer]);
-                                players[currentPlayer]->decBalance(std::stoi(events->getArg(1)));
+                                players[currentPlayer]->decBalance(std::stoi(events->getArg(1)), nullptr);
                                 players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() + receive->getCost());
                                 players[target]->changeAsset(players[target]->getAsset() - receive->getCost());
                             } else if (events->getCommand() == "No" || events->getCommand() == "no") {
@@ -214,7 +231,7 @@ void Game::trade() {
                             if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
                                 successInput = true;
                                 give->setOwner(players[target]);
-                                players[target]->decBalance(std::stoi(events->getArg(2)));
+                                players[target]->decBalance(std::stoi(events->getArg(2)), nullptr);
                                 players[target]->changeAsset(players[target]->getAsset() + give->getCost());
                                 players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() - give->getCost());
                             } else if (events->getCommand() == "No" || events->getCommand() == "no") {
@@ -641,9 +658,8 @@ void Game::processInput() {
                                 std::cout << "You must choose other options to leave the line." << std::endl;
                             }
                         } else if (events->getCommand() == "2") {
-                            if (players[currentPlayer]->getBalance() >= 50) {
                                 successInput = true;
-                                players[currentPlayer]->decBalance(50);
+                                players[currentPlayer]->decBalance(50, nullptr);
                                 bool needUpdate = false;
                                 if (players[currentPlayer]->getTimsTurn() == 4) {
                                     needUpdate = true;
@@ -654,9 +670,6 @@ void Game::processInput() {
                                 if (needUpdate) {
                                     return;
                                 }
-                            } else {
-                                std::cout << "Sorry you don't have enough money! Please choose other options." << std::endl;
-                            }
                         } else if (events->getCommand() == "3") {
                             if (players[currentPlayer]->getTimsCups() > 0) {
                                 successInput = true;
@@ -811,8 +824,13 @@ void Game::processInput() {
                             }
                         }
                     } else if (events->getCommand() == "next") {
-                        nextTurn();
-                        successInput = true;
+                        if (players[currentPlayer]->getWillBankrupt() && !players[currentPlayer]->getBankruptcy()) {
+                            std::cout << "You cannot go to next turn yet." << std::endl;
+                            std::cout << "You must try to raise your balance and pay for what you owe or claim bankruptcy." << std::endl;
+                        } else {
+                            nextTurn();
+                            successInput = true;
+                        }
                     } else if (events->getCommand() == "trade") {
                         trade();
                         successInput = true;
@@ -846,7 +864,7 @@ void Game::processInput() {
                                                 if (academics->getImprovement() < 5) {
                                                     if (players[currentPlayer]->getBalance() >= academics->getImprovementCost()) {
                                                         players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset()+academics->getImprovementCost());
-                                                        players[currentPlayer]->decBalance(academics->getImprovementCost());
+                                                        players[currentPlayer]->decBalance(academics->getImprovementCost(), nullptr);
                                                         academics->addImprovement();
                                                         successInput = true;
                                                     } else {
@@ -919,7 +937,34 @@ void Game::processInput() {
                             std::cout << "Please enter a valid property name!" << std::endl;
                         }
                     } else if (events->getCommand() == "bankrupt") {
-
+                        if (players[currentPlayer]->getWillBankrupt()) {
+                            players[currentPlayer]->setBankruptcy(true);
+                            std::cout << players[currentPlayer]->getName() << " claimed bankruptcy!" << std::endl;
+                            if (players[currentPlayer]->getOwedPlayer()) {
+                                for (auto& square : squares) {
+                                    std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                                    if (building && building->getOwner() == players[currentPlayer]) {
+                                        building->setOwner(players[currentPlayer]->getOwedPlayer());
+                                    }
+                                }
+                                players[currentPlayer]->getOwedPlayer()->changeAsset(
+                                    players[currentPlayer]->getOwedPlayer()->getAsset() + players[currentPlayer]->getAsset());
+                                std::cout << players[currentPlayer]->getName() << "'s assets are now owned by '" 
+                                    << players[currentPlayer]->getOwedPlayer()->getName() << "'s" << std::endl;
+                            } else {
+                                for (auto& square : squares) {
+                                    std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
+                                    std::cout << players[currentPlayer]->getName() << "'s assets are now returned to the open market." << std::endl;
+                                    if (building && building->getOwner() == players[currentPlayer]) {
+                                        building->setMortgage(false);
+                                        auction(building);
+                                    }
+                                }
+                            }
+                            successInput = true;
+                        } else {
+                            std::cout << "You do not owe anyone anything! You can continue playing ;)" << std::endl;
+                        }
                     } else if (events->getCommand() == "assets") {
                         showPlayerAssets(currentPlayer);
                     } else if (events->getCommand() == "all") {
@@ -952,13 +997,27 @@ void Game::processInput() {
                         std::cout << "    save <filename> : saves the current state of the game to the given file." << std::endl;
                     }
                 }
+
+                if (players[currentPlayer]->getWillBankrupt()) {
+                    if (players[currentPlayer]->getBalance() >= players[currentPlayer]->getOwedMoney()) {
+                        std::cout << "You now have $" << players[currentPlayer]->getBalance() << std::endl;
+                        players[currentPlayer]->decBalance(players[currentPlayer]->getOwedMoney(), players[currentPlayer]->getOwedPlayer());
+                        if (players[currentPlayer]->getOwedPlayer()) {
+                            players[currentPlayer]->getOwedPlayer()->addBalance(players[currentPlayer]->getOwedMoney());
+                            std::cout << "You paid " << players[currentPlayer]->getOwedPlayer()->getName() 
+                                << " $" << players[currentPlayer]->getOwedMoney() << " for what you owe." << std::endl;
+                        } else {
+                            std::cout << "You paid the bank $" << players[currentPlayer]->getOwedMoney() << " for what you owe." << std::endl;
+                        }
+                        players[currentPlayer]->setOwedMoney(0);
+                        std::cout << "You do not owe anyone anything now." << std::endl;
+                        players[currentPlayer]->setWillBankrupt(false);
+                    }
+                }
             }
             break;
         }
         case WON_GAME: {
-            break;
-        }
-        case LOST_GAME: {
             break;
         }
     }
@@ -1013,12 +1072,17 @@ void Game::update() {
                     break;
                 }
             }
+            if (players[currentPlayer]->getWillBankrupt()) {
+                if (players[currentPlayer]->getOwedPlayer()) {
+                    gfx->addMsg("Warning! You owe " + players[currentPlayer]->getOwedPlayer()->getName() + 
+                        " $" + std::to_string(players[currentPlayer]->getOwedMoney()) + ".\n");
+                } else {
+                    gfx->addMsg("Warning! You owe bank $" + std::to_string(players[currentPlayer]->getOwedMoney()) + ".\n");
+                }
+            }
             break;
         }
         case WON_GAME: {
-            break;
-        }
-        case LOST_GAME: {
             break;
         }
     }
@@ -1047,9 +1111,11 @@ void Game::render() {
             break;
         }
         case WON_GAME: {
-            break;
-        }
-        case LOST_GAME: {
+            std::cout << "================================================================================" << std::endl;
+            std::cout << "Congratulations! " << players[currentPlayer]->getName() << " is the final winner!" << std::endl;
+            std::cout << "This is your final assets summary:" << std::endl;
+            showPlayerAssets(currentPlayer);
+            state = NO_GAME;
             break;
         }
     }

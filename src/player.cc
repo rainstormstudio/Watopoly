@@ -4,11 +4,12 @@
 #include "./buildings/residence.h"
 
 Player::Player(std::string name, char symbol)
-	: name{name}, symbol{symbol}, position{0}, balance{1500}, asset{0}, owedBank{0}, numResi{0}, numGyms{0}, numTimsCups{0} {
+	: name{name}, symbol{symbol}, position{0}, balance{1500}, asset{0}, owedMoney{0}, numResi{0}, numGyms{0}, numTimsCups{0} {
     hasRolled = false;
     isBankrupt = false;
+    willBankrupt = false;
     canBuy = false;
-    oweOtherPlayers = std::map<char, unsigned int> { {'G',0}, {'B',0}, {'D',0}, {'P',0},{'S',0},{'$',0},{'L',0},{'T',0} };
+    owedPlayer = nullptr;
     timsTurn = 0;
 }
 
@@ -129,19 +130,12 @@ void Player::addBalance(unsigned int total) {
     balance += total;
 }
 
-void Player::decBalance(unsigned int total) {
-    balance -= total;
-}
-
-void Player::decBalance(unsigned int total, char oweWhom) {
-    if ((balance-total) < 0) {
-        // should consider different cases here? To bank or other players?
-        unsigned int totalOwe = total - balance;
-        if (std::isblank(oweWhom)) {
-            owedBank += totalOwe;
-        } else {
-            oweOtherPlayers.find(oweWhom)->second += totalOwe;
-        }
+void Player::decBalance(unsigned int total, std::shared_ptr<Player> owedPlayer) {
+    if (balance < total) {
+        balance = 0;
+        willBankrupt = true;
+        owedMoney = total - balance;
+        this->owedPlayer = owedPlayer;
     } else {
         balance -= total;
     }
@@ -223,4 +217,30 @@ unsigned int Player::getTimsTurn() const {
 
 void Player::resetTimsTurn() {
     timsTurn = 0;
+}
+
+bool Player::getBankruptcy() const {
+    return isBankrupt;
+}
+
+void Player::setBankruptcy(bool value) {
+    isBankrupt = value;
+}
+
+bool Player::getWillBankrupt() const {
+    return willBankrupt;
+}
+
+void Player::setWillBankrupt(bool value) {
+    willBankrupt = value;
+}
+
+std::shared_ptr<Player> Player::getOwedPlayer() const { return owedPlayer; }
+
+unsigned int Player::getOwedMoney() const {
+    return owedMoney;
+}
+
+void Player::setOwedMoney(unsigned int value) {
+    owedMoney = value;
 }

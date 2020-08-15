@@ -45,11 +45,13 @@ void Academics::update(std::vector<std::shared_ptr<Player>> players, std::shared
     if (newPlayer) {
         gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
         if (owner) {
-            if (owner != newPlayer) {
+            if (owner != newPlayer && !this->mortgaged) {
                 fee = getTuition(improvement);
-                newPlayer->decBalance(fee);
+                newPlayer->decBalance(fee, owner);
                 owner->addBalance(fee);
-                gfx->addMsg("You paid " + owner->getName() + " $" + std::to_string(fee) + " for tuition. ");
+                if (!newPlayer->getWillBankrupt()) {
+                    gfx->addMsg("You paid " + owner->getName() + " $" + std::to_string(fee) + " for tuition. ");
+                }
             }
         } else {
             newPlayer->setCanBuy(true);

@@ -46,8 +46,7 @@ enum GameState {
     NO_GAME,
     PRE_GAME,
     IN_GAME,
-    WON_GAME,
-    LOST_GAME
+    WON_GAME
 };
 
 enum GameMode {
