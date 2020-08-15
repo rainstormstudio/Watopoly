@@ -92,7 +92,7 @@ void Player::unmortgage(std::shared_ptr<Building> building) {
         std::cout << "Unmortgage fails! You are not the owner of " << building->getName() << "!" << std::endl;
         return;
     }
-    if (building->getMortgage() == true) {
+    if (building->getMortgage() == false) {
         std::cout << "Unmortgage is already activated!" << std::endl;
         return;
     }
