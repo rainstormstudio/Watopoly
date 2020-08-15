@@ -25,8 +25,10 @@ class Player {
     bool willBankrupt = false;
     bool hasRolled;
     bool NeedToPayTuition = false;
+    bool NeedToCoopFee = false;
     bool collectGooseBonus = false;
     bool passOSAP=false;
+    bool landOSAP=false;
 
     unsigned int timsTurn;
     
@@ -67,11 +69,17 @@ public:
     bool getNeedToPayTuition() const;
     int payTuition(std::string option);
 
+    void setNeedToCoopFee(bool value);
+    bool getNeedToCoopFee() const;
+
     void setCollectGooseBonus(bool value);
     bool getCollectGooseBonus() const;
 
     void setPassOSAP(bool value);
     bool getPassOSAP() const;
+
+    void setLandOSAP(bool value);
+    bool getLandOSAP() const;
 
     void setCanBuy(bool value);
     bool getCanBuy() const;

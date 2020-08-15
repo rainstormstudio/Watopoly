@@ -166,6 +166,14 @@ int Player::payTuition(std::string option) {
     return 0;
 }
 
+void Player::setNeedToCoopFee(bool value) {
+    NeedToCoopFee = value;
+}
+
+bool Player::getNeedToCoopFee() const {
+    return NeedToCoopFee;
+}
+
 void Player::setCollectGooseBonus(bool value) {
     collectGooseBonus = value;
 }
@@ -180,6 +188,14 @@ void Player::setPassOSAP(bool value) {
 
 bool Player::getPassOSAP() const {
     return passOSAP;
+}
+
+void Player::setLandOSAP(bool value) {
+    landOSAP = value;
+}
+
+bool Player::getLandOSAP() const {
+    return landOSAP;
 }
 
 void Player::setCanBuy(bool value) {

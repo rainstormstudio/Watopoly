@@ -677,6 +677,7 @@ void Game::processInput() {
                         } else if (events->getCommand() == "2") {
                                 successInput = true;
                                 players[currentPlayer]->decBalance(50, nullptr);
+                                bank += 50;
                                 bool needUpdate = false;
                                 if (players[currentPlayer]->getTimsTurn() == 4) {
                                     needUpdate = true;
@@ -715,8 +716,29 @@ void Game::processInput() {
                 players[currentPlayer]->setTimsTurn(players[currentPlayer]->getTimsTurn() + 1);
             }
             if (players[currentPlayer]->getPassOSAP()) {
-                std::cout << "Passed by OSAP! Received $200!" << std::endl;
+                if (bank >= 200) {
+                    std::cout << "Passed by OSAP! Received $200!" << std::endl;
+                    players[currentPlayer]->addBalance(200);
+                    bank -= 200;
+                } else {
+                    std::cout << "Passed by OSAP! But no OSAP fee is available now!" << std::endl;
+                }
                 players[currentPlayer]->setPassOSAP(false);
+            }
+            if (players[currentPlayer]->getLandOSAP()) {
+                if (bank >= 400) {
+                    players[currentPlayer]->addBalance(400);
+                    bank -= 400;
+                    std::cout << "Received $400 (doubled) OSAP fee!" << std::endl;
+                } else {
+                    std::cout << "No OSAP fee is available now!" << std::endl;
+                }
+                players[currentPlayer]->setLandOSAP(false);
+            }
+            if (players[currentPlayer]->getNeedToCoopFee()) {
+                players[currentPlayer]->decBalance(150, nullptr);
+                bank += 150;
+                players[currentPlayer]->setNeedToCoopFee(false);
             }
             if (players[currentPlayer]->getCollectGooseBonus()) {
                 players[currentPlayer]->addBalance(bank);
@@ -808,8 +830,10 @@ void Game::processInput() {
                                     unsigned int newPosition = players[currentPlayer]->getPosition() + moveForward;
                                     // osap update;
                                     if (40-players[currentPlayer]->getPosition() < moveForward) {
-                                        players[currentPlayer]->addBalance(200);
                                         players[currentPlayer]->setPassOSAP(true);
+                                    }
+                                    if (40-players[currentPlayer]->getPosition() == moveForward) {
+                                        players[currentPlayer]->setLandOSAP(true);
                                     }
                                     players[currentPlayer]->setPosition(newPosition);
                                     if (firstRoll != secondRoll) {
@@ -827,10 +851,12 @@ void Game::processInput() {
                                 if (Math::isNat(events->getArg(0)) && Math::isNat(events->getArg(1))) {
                                     unsigned int moveForward = std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
                                     unsigned int newPosition = players[currentPlayer]->getPosition() + std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
-                                    std::cout << "move " << moveForward << std::endl;
+                                    //std::cout << "move " << moveForward << std::endl;
                                     if (40-players[currentPlayer]->getPosition() < moveForward) {
                                         players[currentPlayer]->setPassOSAP(true);
-                                        players[currentPlayer]->addBalance(200);
+                                    }
+                                    if (40-players[currentPlayer]->getPosition() == moveForward) {
+                                        players[currentPlayer]->setLandOSAP(true);
                                     }
                                     players[currentPlayer]->setPosition(newPosition);
                                     players[currentPlayer]->setRolled(true);

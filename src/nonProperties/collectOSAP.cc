@@ -11,10 +11,10 @@ void CollectOSAP::addPlayer(std::shared_ptr<Player> initPlayer) {
 
 void CollectOSAP::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) {
     updatePlayers(players);
-    unsigned int OSAPFee = 400;
+    //unsigned int OSAPFee = 400;
     if (newPlayer) {
-        newPlayer->addBalance(OSAPFee);
-        gfx->addMsg(newPlayer->getName() + " landed on OSAP, and received $400 (doubled) for OSAP fee.");
+        newPlayer->setLandOSAP(true);
+        gfx->addMsg(newPlayer->getName() + " landed on OSAP.");
     }
 }
 

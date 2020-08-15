@@ -7,7 +7,7 @@ void GoToTims::update(std::vector<std::shared_ptr<Player>> players, std::shared_
 	updatePlayers(players);
 	if (newPlayer) {
 		newPlayer->gotoTims();
-		gfx->addMsg("You are sent to DC Tims. ");
+		//gfx->addMsg("You are sent to DC Tims. ");
 	}
 }
 
