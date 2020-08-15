@@ -50,8 +50,8 @@ public:
     unsigned int getAsset() const;
     void changeAsset(unsigned int c);
 
-    void mortgage(std::shared_ptr<Building> building);
-    void unmortgage(std::shared_ptr<Building> building);
+    bool mortgage(std::shared_ptr<Building> building);
+    bool unmortgage(std::shared_ptr<Building> building);
 
     void setRolled(bool rolled);
     bool rolled() const;

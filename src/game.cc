@@ -972,7 +972,13 @@ void Game::processInput() {
                                 // debugging use
                                 std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
                                 if (building) {
-                                    players[currentPlayer]->mortgage(building);
+                                    bool flag = players[currentPlayer]->mortgage(building);
+                                    if (flag) {
+                                        gfx->resetMsg();
+                                        render();
+                                        std::cout << "Mortgage successfully! " << players[currentPlayer]->getName() << " have mortgaged " << building->getName()
+                                            << ", and received $" << static_cast<unsigned int>(building->getCost() * 0.5) << "!" << std::endl;
+                                    }
                                     break;
                                 } else {
                                     std::cout << "Cannot mortgage NonProperty or Academic Buildings!" << std::endl;
@@ -990,7 +996,13 @@ void Game::processInput() {
                                 existing = true;
                                 std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
                                 if (building) {
-                                    players[currentPlayer]->unmortgage(building);
+                                    bool flag = players[currentPlayer]->unmortgage(building);
+                                    if (flag) {
+                                        gfx->resetMsg();
+                                        render();
+                                        std::cout << "Unmortgage successfully! " << players[currentPlayer]->getName() << " have unmortgaged " << building->getName()
+                                        << ", and pay $" << static_cast<unsigned int>(building->getCost() * 0.6) << "!" << std::endl;
+                                    }
                                     break;
                                 } else {
                                     std::cout << "Cannot unmortgage NonProperty or Academic Buildings!" << std::endl;
