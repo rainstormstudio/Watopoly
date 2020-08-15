@@ -54,51 +54,52 @@ void SLC::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<G
                 newPlayer->setTimsCups(newPlayer->getTimsCups() + 1);
                 gfx->addMsg("Congratulations! You won a Roll Up the Rim cup.\n");
             }
-        }
-        move = getOption();
-        switch (move) {
-            case BACK_3: {
-                newPlayer->setPosition(square_pos - 3);
-                gfx->addMsg("SLC asked you to move back by 3 squares. ");
-                break;
-            }
-            case BACK_2: {
-                newPlayer->setPosition(square_pos - 2);
-                gfx->addMsg("SLC asked you to move back by 2 squares. ");
-                break;
-            }
-            case BACK_1: {
-                newPlayer->setPosition(square_pos - 1);
-                gfx->addMsg("SLC asked you to move back by 1 squares. ");
-                break;
-            }
-            case FORWARD_1: {
-                newPlayer->setPosition(square_pos + 1);
-                gfx->addMsg("SLC asked you to move forward by 1 square. ");
-                break;
-            }
-            case FORWARD_2: {
-                newPlayer->setPosition(square_pos + 2);
-                gfx->addMsg("SLC asked you to move forward by 2 square. ");
-                break;
-            }
-            case FORWARD_3: {
-                newPlayer->setPosition(square_pos + 3);
-                gfx->addMsg("SLC asked you to move forward by 3 square. ");
-                break;
-            }
-            case GO_TO_DCtims: {
-                newPlayer->gotoTims();
-                gfx->addMsg("SLC asked you to move to DC tims line. ");
-                break;
-            }
-            case GO_TO_COSAP: {
-                newPlayer->setPosition(0);
-                gfx->addMsg("SLC asked you to move to Collect OSAP. ");
-                break;
-            }
-            default: {
-                break;
+        } else {
+            move = getOption();
+            switch (move) {
+                case BACK_3: {
+                    newPlayer->setPosition(square_pos - 3);
+                    gfx->addMsg("SLC asked you to move back by 3 squares. ");
+                    break;
+                }
+                case BACK_2: {
+                    newPlayer->setPosition(square_pos - 2);
+                    gfx->addMsg("SLC asked you to move back by 2 squares. ");
+                    break;
+                }
+                case BACK_1: {
+                    newPlayer->setPosition(square_pos - 1);
+                    gfx->addMsg("SLC asked you to move back by 1 squares. ");
+                    break;
+                }
+                case FORWARD_1: {
+                    newPlayer->setPosition(square_pos + 1);
+                    gfx->addMsg("SLC asked you to move forward by 1 square. ");
+                    break;
+                }
+                case FORWARD_2: {
+                    newPlayer->setPosition(square_pos + 2);
+                    gfx->addMsg("SLC asked you to move forward by 2 square. ");
+                    break;
+                }
+                case FORWARD_3: {
+                    newPlayer->setPosition(square_pos + 3);
+                    gfx->addMsg("SLC asked you to move forward by 3 square. ");
+                    break;
+                }
+                case GO_TO_DCtims: {
+                    newPlayer->gotoTims();
+                    gfx->addMsg("SLC asked you to move to DC tims line. ");
+                    break;
+                }
+                case GO_TO_COSAP: {
+                    newPlayer->setPosition(0);
+                    gfx->addMsg("SLC asked you to move to Collect OSAP. ");
+                    break;
+                }
+                default: {
+                    break;
+                }
             }
         }
     }
@@ -106,6 +107,9 @@ void SLC::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<G
 
 void SLC::render(std::shared_ptr<Graphics> gfx) {
     gfx->write(name, coordinate.x, coordinate.y, 8);
+    for (unsigned int i = 0; i < players.size(); ++i) {
+        gfx->draw(players[i]->getSymbol(), coordinate.x + i, coordinate.y + 3);
+    }
 }
 
 
