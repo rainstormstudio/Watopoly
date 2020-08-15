@@ -624,6 +624,7 @@ void Game::processInput() {
                         state = NO_GAME;
                         return;
                     } else {
+                        std::cout << "Enter 1 to roll the dice, enter 2 to pay $50, and enter 3 to use Roll Up the Rim Cup." << std::endl;
                         if (events->getCommand() == "1") {
                             if (players[currentPlayer]->getTimsTurn() < 3) {
                                 successInput = true;
@@ -788,12 +789,12 @@ void Game::processInput() {
                                 } else {
                                     unsigned int moveForward = firstRoll + secondRoll;
                                     unsigned int newPosition = players[currentPlayer]->getPosition() + moveForward;
-                                    players[currentPlayer]->setPosition(newPosition);
                                     // osap update;
                                     if (40-players[currentPlayer]->getPosition() < moveForward) {
                                         players[currentPlayer]->addBalance(200);
                                         players[currentPlayer]->setPassOSAP(true);
                                     }
+                                    players[currentPlayer]->setPosition(newPosition);
                                     if (firstRoll != secondRoll) {
                                         players[currentPlayer]->setRolled(true);
                                     } else {
