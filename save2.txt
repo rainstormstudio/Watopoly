@@ -1,0 +1,32 @@
+3
+Daniel G 0 1200 3
+Peter B 0 1000 1
+Jack T 0 1800 16
+AL Daniel 5 
+ML Daniel 5 
+MKV Daniel 0 
+ECH Daniel 5 
+PAS Peter 0 
+HH BANK 0 
+RCH Jack 0 
+PAC BANK 0 
+DWE Peter 5 
+CPH BANK 0 
+UWP Peter 0 
+LHI Peter 0 
+BMH BANK 0 
+OPT BANK 0 
+EV1 Peter 2 
+EV2 BANK 0 
+EV3 BANK 0 
+V1 BANK 0 
+PHYS BANK 0 
+B1 BANK 0 
+CIF BANK 0 
+B2 BANK 0 
+EIT BANK 0 
+ESC BANK 0 
+C2 BANK 0 
+REV BANK 0 
+MC BANK 0 
+DC BANK 0 
