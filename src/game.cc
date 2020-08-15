@@ -705,6 +705,7 @@ void Game::processInput() {
             }
             if (players[currentPlayer]->getPassOSAP()) {
                 std::cout << "Passed by OSAP! Received $200!" << std::endl;
+                players[currentPlayer]->setPassOSAP(false);
             }
             if (players[currentPlayer]->getCollectGooseBonus()) {
                 players[currentPlayer]->addBalance(bank);
