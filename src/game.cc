@@ -26,6 +26,7 @@ bool Game::monopolyHasImprovement(std::shared_ptr<Building> building) {
 }
 
 void Game::nextTurn() {
+    rollNum = 0;
     players[currentPlayer]->setRolled(false);
     currentPlayer = (currentPlayer + 1) % players.size();
 }
@@ -58,7 +59,69 @@ void Game::showPlayerAssets(unsigned int playerIndex) const {
     std::cout << "================================================================================" << std::endl;
 }
 
-void Game::auction(std::shared_ptr<Building> building) {}
+void Game::auction(std::shared_ptr<Building> building) {
+    std::cout << "Start auction for " << building->getName() << "!" << std::endl;
+    unsigned int maxBid = 0;
+    unsigned int maxBidPlayer = currentPlayer;
+    std::vector<bool> auctionPlayers = std::vector<bool>(players.size());
+    unsigned int numAuctionPlayers = players.size();
+    unsigned int currentAuctionPlayer = currentPlayer;
+    for (unsigned int i = 0; i < players.size(); ++i) {
+        auctionPlayers[i] = true;
+    }
+    while (numAuctionPlayers != 1) {
+        do {
+            currentAuctionPlayer = (currentAuctionPlayer + 1) % players.size();
+        } while (!auctionPlayers[currentAuctionPlayer]);
+        std::cout << "Now is " << players[currentAuctionPlayer]->getName() << "'s turn to bid." << std::endl;
+        std::cout << "The current bid is $" << maxBid << "." << std::endl;
+        std::cout << "Your options are:" << std::endl;
+        std::cout << "    bid <money>" << std::endl;
+        std::cout << "    withdraw" << std::endl;
+        std::cout << "    assets" << std::endl;
+        bool successInput = false;
+        while (!successInput) {
+            if (!events->readLine()) {
+                state = NO_GAME;
+                return;
+            }
+            if (events->getCommand() == "bid") {
+                if (Math::isNat(events->getArg(0))) {
+                    unsigned int newBid = static_cast<unsigned int>(std::stoi(events->getArg(0)));
+                    if (players[currentAuctionPlayer]->getBalance() < newBid) {
+                        std::cout << "Sorry you don't have that much money to bid." << std::endl;
+                    } else {
+                        if (newBid <= maxBid) {
+                            std::cout << "Sorry the max bid is higher than your bid." << std::endl;
+                        } else {
+                            successInput = true;
+                            maxBid = newBid;
+                            maxBidPlayer = currentAuctionPlayer;
+                            std::cout << "The new max bid is now $" << maxBid << "." << std::endl;
+                        }
+                    }
+                } else {
+                    std::cout << "Please enter a valid natural number for <money>." << std::endl;
+                }
+            } else if (events->getCommand() == "withdraw") {
+                successInput = true;
+                std::cout << players[currentAuctionPlayer]->getName() << " withdraws the current auction." << std::endl;
+                auctionPlayers[currentAuctionPlayer] = false;
+                --numAuctionPlayers;
+            } else if (events->getCommand() == "assets") {
+                showPlayerAssets(currentAuctionPlayer);
+            } else {
+                std::cout << "Please enter a valid command." << std::endl;
+            }
+        }
+    }
+    building->setOwner(players[maxBidPlayer]);
+    players[maxBidPlayer]->decBalance(maxBid);
+    render();
+    std::cout << "Summary of auction:" << std::endl;
+    std::cout << building->getName() << " was bought by " << players[maxBidPlayer]->getName() << " with $" << maxBid << "." << std::endl;
+}
+
 void Game::trade() {
     if (Math::isNat(events->getArg(0))) {
         std::cout << "You should input a player's name for the first argument." << std::endl;
@@ -453,7 +516,7 @@ void Game::processInput() {
                     }
                 }
             } else {
-                std::cout << "How many players? (1-8)" << std::endl;
+                std::cout << "How many players? (2-8)" << std::endl;
                 bool successInput = false;
                 int numPlayers = 0;
                 while (!successInput) {
@@ -463,10 +526,10 @@ void Game::processInput() {
                     } 
                     if (Math::isNat(events->getCommand())) {
                         numPlayers = std::stoi(events->getCommand());
-                        if (numPlayers >= 1 && numPlayers <= 8) {
+                        if (numPlayers >= 2 && numPlayers <= 8) {
                             successInput = true;
                         } else {
-                            std::cout << "Your number is not between 1 and 8." << std::endl;
+                            std::cout << "Your number is not between 2 and 8." << std::endl;
                         }
                     } else {
                         std::cout << "Your input is not a valid number." << std::endl;
@@ -652,7 +715,11 @@ void Game::processInput() {
                             }
                             successInput = true;
                         } else if (events->getCommand() == "No" || events->getCommand() == "no") {
+                            std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[players[currentPlayer]->getPosition()]);
+                            auction(building);
                             successInput = true;
+                        } else if (events->getCommand() == "assets") {
+                            showPlayerAssets(currentPlayer);
                         } else {
                             std::cout << "Please enter yes or no." << std::endl;
                         }
@@ -698,16 +765,29 @@ void Game::processInput() {
                         }
                         if (mode == NORMAL_GAMEMODE) {
                             if (!players[currentPlayer]->rolled()) {
-                                unsigned int moveForward = Math::rollTwoDice();
-                                unsigned int newPosition = players[currentPlayer]->getPosition() + moveForward;
-                                players[currentPlayer]->setPosition(newPosition);
-                                // osap update;
-                                if (40-players[currentPlayer]->getPosition() < moveForward) {
-                                    players[currentPlayer]->addBalance(200);
-                                    players[currentPlayer]->setPassOSAP(true);
+                                unsigned int firstRoll = Math::rollDice();
+                                unsigned int secondRoll = Math::rollDice();
+                                if (firstRoll == secondRoll && rollNum == 2) {
+                                    players[currentPlayer]->setRolled(true);
+                                    players[currentPlayer]->gotoTims();
+                                    successInput = true;
+                                    rollNum = 0;
+                                } else {
+                                    unsigned int moveForward = firstRoll + secondRoll;
+                                    unsigned int newPosition = players[currentPlayer]->getPosition() + moveForward;
+                                    players[currentPlayer]->setPosition(newPosition);
+                                    // osap update;
+                                    if (40-players[currentPlayer]->getPosition() < moveForward) {
+                                        players[currentPlayer]->addBalance(200);
+                                        players[currentPlayer]->setPassOSAP(true);
+                                    }
+                                    if (firstRoll != secondRoll) {
+                                        players[currentPlayer]->setRolled(true);
+                                    } else {
+                                        ++rollNum;
+                                    }
+                                    successInput = true;
                                 }
-                                players[currentPlayer]->setRolled(true);
-                                successInput = true;
                             } else {
                                 std::cout << "You have rolled already." << std::endl;
                             }

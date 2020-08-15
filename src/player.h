@@ -21,10 +21,10 @@ class Player {
     unsigned int numGyms;
     unsigned int numTimsCups;
 
-    bool isBankrupt=false;
+    bool isBankrupt = false;
     bool hasRolled;
-    bool NeedToPayTuition=false;
-    bool collectGooseBonus=false;
+    bool NeedToPayTuition = false;
+    bool collectGooseBonus = false;
     bool passOSAP=false;
 
     unsigned int timsTurn;

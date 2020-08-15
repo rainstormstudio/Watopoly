@@ -20,6 +20,8 @@ class Game {
     unsigned int currentPlayer;
     unsigned int bank = 500;
 
+    unsigned int rollNum = 0;
+
     bool monopolyHasImprovement(std::shared_ptr<Building> building);
 
     // changes currentPlayer to the next

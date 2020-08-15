@@ -33,7 +33,7 @@ void Residence::update(std::vector<std::shared_ptr<Player>> players, std::shared
             }
         } else {
             newPlayer->setCanBuy(true);
-            gfx->addMsg("This property is not owned. \nIt worths $" + std::to_string(cost) + ". \nDo you want to buy it?. (Yes/No) ");
+            gfx->addMsg("This property is not owned. \nIt worths $" + std::to_string(cost) + ". \nDo you want to buy it?. (Yes/No/assets) ");
         }
     }
 }
