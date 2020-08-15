@@ -21,14 +21,14 @@ unsigned int Math::rollTwoDice() {
 }
 
 bool Math::isNat(std::string str) {
-    int len = str.length();
-    if (len == 0) {
-        return false;
-    }
-    for (int i = 0; i < len; ++i) {
-        if (!(str[i] >= '0' && str[i] <= '9')) {
+    int answer = 0;
+    try {
+        answer = std::stoi(str.c_str());
+        if (answer < 0) {
             return false;
         }
+    } catch (...) {
+        return false;
     }
     return true;
 }

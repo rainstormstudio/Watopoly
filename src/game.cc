@@ -148,7 +148,7 @@ void Game::trade() {
         std::cout << "You should input a player's name for the first argument." << std::endl;
     } else {
         unsigned int target = 0;
-        for (unsigned int target = 0; target < players.size(); ++target) {
+        for (target = 0; target < players.size(); ++target) {
             if (players[target]->getName() == events->getArg(0)) {
                 break;
             }
@@ -183,6 +183,8 @@ void Game::trade() {
                     std::cout << players[target]->getName() << ", " << players[currentPlayer]->getName() 
                         << " wants to give you $" << events->getArg(1) << " in exchange for your " << receive->getName() << "." << std::endl;
                     std::cout << "Do you accept that? (Yes/No): " << std::endl;
+                    std::string arg1 = events->getArg(1);
+                    std::string arg2 = events->getArg(2);
                     bool successInput = false;
                     while (!successInput) {
                         if (!events->readLine()) {
@@ -192,9 +194,10 @@ void Game::trade() {
                             if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
                                 successInput = true;
                                 receive->setOwner(players[currentPlayer]);
-                                players[currentPlayer]->decBalance(std::stoi(events->getArg(1)), nullptr);
+                                players[currentPlayer]->decBalance(std::stoi(arg1), nullptr);
                                 players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() + receive->getCost());
                                 players[target]->changeAsset(players[target]->getAsset() - receive->getCost());
+                                render();
                             } else if (events->getCommand() == "No" || events->getCommand() == "no") {
                                 successInput = true;
                             } else {
@@ -226,6 +229,8 @@ void Game::trade() {
                     std::cout << players[target]->getName() << ", " << players[currentPlayer]->getName()
                         << "wants to give you " << give->getName() << " in exchange for your $" << events->getArg(2);
                     std::cout << "Do you accept that? (Yes/No): " << std::endl;
+                    std::string arg1 = events->getArg(1);
+                    std::string arg2 = events->getArg(2);
                     bool successInput = false;
                     while (!successInput) {
                         if (!events->readLine()) {
@@ -235,9 +240,10 @@ void Game::trade() {
                             if (events->getCommand() == "Yes" || events->getCommand() == "yes") {
                                 successInput = true;
                                 give->setOwner(players[target]);
-                                players[target]->decBalance(std::stoi(events->getArg(2)), nullptr);
+                                players[target]->decBalance(std::stoi(arg2), nullptr);
                                 players[target]->changeAsset(players[target]->getAsset() + give->getCost());
                                 players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() - give->getCost());
+                                render();
                             } else if (events->getCommand() == "No" || events->getCommand() == "no") {
                                 successInput = true;
                             } else {
@@ -300,6 +306,7 @@ void Game::trade() {
                                 players[target]->changeAsset(players[target]->getAsset() - receive->getCost());
                                 players[target]->changeAsset(players[target]->getAsset() + give->getCost());
                                 players[currentPlayer]->changeAsset(players[currentPlayer]->getAsset() - give->getCost());
+                                render();
                             } else if (events->getCommand() == "No" || events->getCommand() == "no") {
                                 successInput = true;
                             } else {
@@ -847,7 +854,6 @@ void Game::processInput() {
                         }
                     } else if (events->getCommand() == "trade") {
                         trade();
-                        successInput = true;
                     } else if (events->getCommand() == "improve") {
                         if (events->getArgs().size() == 2) {
                             bool existing = false;
