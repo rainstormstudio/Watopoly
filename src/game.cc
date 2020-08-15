@@ -419,9 +419,14 @@ void Game::loadGame(std::string filename) {
     }
 }
 
-Game::Game(GameMode mode, std::string loadFile) : mode{mode} {
+Game::Game(GameMode mode, std::string loadFile, std::string theme) : mode{mode} {
     if (loadFile != "") {
         loadGame(loadFile);
+    }
+    if (theme != "") {
+        themeFile = "./assets/gameboard_" + theme + ".txt";
+    } else {
+        themeFile = "./assets/gameboard.txt";
     }
     state = NO_GAME;
     currentPlayer = 0;
@@ -1106,7 +1111,7 @@ void Game::render() {
         }
         case IN_GAME: {
             gfx->clear();
-            gfx->drawImage("./assets/gameboard.txt");
+            gfx->drawImage(themeFile);
             
             for (auto &square : squares) {
                 square->render(gfx);

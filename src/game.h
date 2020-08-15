@@ -14,6 +14,9 @@ class Game {
     std::shared_ptr<SaveData> data;
     GameState state;
     std::shared_ptr<Graphics> gfx;
+
+    std::string themeFile;
+
     std::shared_ptr<InputManager> events;
     std::vector<std::shared_ptr<Square>> squares;
     std::vector<std::shared_ptr<Player>> players;
@@ -35,7 +38,7 @@ class Game {
     void saveGame(std::string filename);
     void loadGame(std::string filename);
 public:
-    Game(GameMode mode, std::string loadFile);
+    Game(GameMode mode, std::string loadFile, std::string theme);
 
     bool loop() const;
 
