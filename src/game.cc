@@ -324,16 +324,17 @@ void Game::saveGame(std::string filename) {
     if (outfile.is_open()) {
         outfile << players.size() << std::endl;
         for (unsigned int i = 0; i < players.size(); ++i) {
-            outfile << players[i]->getName() << " " 
-                    << players[i]->getSymbol() << " " 
-                    << players[i]->getTimsCups() << " " 
-                    << players[i]->getBalance() << " "
-                    << players[i]->getPosition();
-            if (players[i]->getPosition() == 10) {
-                if (players[i]->getTimsTurn() == 0) {
+            unsigned int j = (i + currentPlayer) % players.size();
+            outfile << players[j]->getName() << " " 
+                    << players[j]->getSymbol() << " " 
+                    << players[j]->getTimsCups() << " " 
+                    << players[j]->getBalance() << " "
+                    << players[j]->getPosition();
+            if (players[j]->getPosition() == 10) {
+                if (players[j]->getTimsTurn() == 0) {
                     outfile << "0";
                 } else {
-                    outfile << "1 " << players[i]->getTimsTurn();
+                    outfile << "1 " << players[j]->getTimsTurn();
                 }
             }
             outfile << std::endl;
@@ -527,15 +528,20 @@ void Game::processInput() {
                     for (unsigned int j = 0; j < squares.size(); ++j) {
                         std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[j]);
                         if (building && building->getName() == data->buildingData[i].name) {
-                            for (unsigned int k = 0; k < players.size(); ++k) {
+                            unsigned int k = 0;
+                            for (k = 0; k < players.size(); ++k) {
                                 if (players[k]->getName() == data->buildingData[i].owner) {
                                     building->setOwner(players[k]);
+                                    players[k]->changeAsset(players[k]->getAsset() + building->getCost());
                                     break;
                                 }
                             }
                             std::shared_ptr<Academics> academics = std::dynamic_pointer_cast<Academics>(building);
                             if (academics) {
                                 academics->setImprovement(data->buildingData[i].improvements);
+                                if (k < players.size()) {
+                                    players[k]->changeAsset(players[k]->getAsset() + academics->getImprovementCost() * academics->getImprovement());
+                                }
                             }
                             std::shared_ptr<Gym> gym = std::dynamic_pointer_cast<Gym>(building);
                             if (gym && gym->getOwner()) {
@@ -849,18 +855,31 @@ void Game::processInput() {
                         } else if (mode == TESTING_GAMEMODE) {
                             if (!players[currentPlayer]->rolled()) {
                                 if (Math::isNat(events->getArg(0)) && Math::isNat(events->getArg(1))) {
-                                    unsigned int moveForward = std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
-                                    unsigned int newPosition = players[currentPlayer]->getPosition() + std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
-                                    //std::cout << "move " << moveForward << std::endl;
-                                    if (40-players[currentPlayer]->getPosition() < moveForward) {
-                                        players[currentPlayer]->setPassOSAP(true);
+                                    unsigned int firstRoll = static_cast<unsigned int>(std::stoi(events->getArg(0)));
+                                    unsigned int secondRoll = static_cast<unsigned int>(std::stoi(events->getArg(1)));
+                                    if (firstRoll == secondRoll && rollNum == 2) {
+                                        players[currentPlayer]->setRolled(true);
+                                        players[currentPlayer]->gotoTims();
+                                        successInput = true;
+                                        rollNum = 0;
+                                    } else {
+                                        unsigned int moveForward = firstRoll + secondRoll;
+                                        unsigned int newPosition = players[currentPlayer]->getPosition() + moveForward;
+                                        //std::cout << "move " << moveForward << std::endl;
+                                        if (40-players[currentPlayer]->getPosition() < moveForward) {
+                                            players[currentPlayer]->setPassOSAP(true);
+                                        }
+                                        if (40-players[currentPlayer]->getPosition() == moveForward) {
+                                            players[currentPlayer]->setLandOSAP(true);
+                                        }
+                                        players[currentPlayer]->setPosition(newPosition);                                        
+                                        if (firstRoll != secondRoll) {
+                                            players[currentPlayer]->setRolled(true);
+                                        } else {
+                                            ++rollNum;
+                                        }
+                                        successInput = true;
                                     }
-                                    if (40-players[currentPlayer]->getPosition() == moveForward) {
-                                        players[currentPlayer]->setLandOSAP(true);
-                                    }
-                                    players[currentPlayer]->setPosition(newPosition);
-                                    players[currentPlayer]->setRolled(true);
-                                    successInput = true;
                                 } else {
                                     std::cout << "Please input two natural numbers." << std::endl;
                                 }
@@ -953,7 +972,13 @@ void Game::processInput() {
                                 // debugging use
                                 std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
                                 if (building) {
-                                    players[currentPlayer]->mortgage(building);
+                                    bool flag = players[currentPlayer]->mortgage(building);
+                                    if (flag) {
+                                        gfx->resetMsg();
+                                        render();
+                                        std::cout << "Mortgage successfully! " << players[currentPlayer]->getName() << " have mortgaged " << building->getName()
+                                            << ", and received $" << static_cast<unsigned int>(building->getCost() * 0.5) << "!" << std::endl;
+                                    }
                                     break;
                                 } else {
                                     std::cout << "Cannot mortgage NonProperty or Academic Buildings!" << std::endl;
@@ -971,7 +996,13 @@ void Game::processInput() {
                                 existing = true;
                                 std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(squares[i]);
                                 if (building) {
-                                    players[currentPlayer]->unmortgage(building);
+                                    bool flag = players[currentPlayer]->unmortgage(building);
+                                    if (flag) {
+                                        gfx->resetMsg();
+                                        render();
+                                        std::cout << "Unmortgage successfully! " << players[currentPlayer]->getName() << " have unmortgaged " << building->getName()
+                                        << ", and pay $" << static_cast<unsigned int>(building->getCost() * 0.6) << "!" << std::endl;
+                                    }
                                     break;
                                 } else {
                                     std::cout << "Cannot unmortgage NonProperty or Academic Buildings!" << std::endl;

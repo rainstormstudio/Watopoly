@@ -42,7 +42,7 @@ void Residence::update(std::vector<std::shared_ptr<Player>> players, std::shared
 
 void Residence::render(std::shared_ptr<Graphics> gfx) {
     if (owner) {
-        gfx->write(name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y, 8);
+        gfx->write((mortgaged ? "'" : "") + name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y, 8);
     } else {
         gfx->write(name, coordinate.x, coordinate.y, 8);
     }

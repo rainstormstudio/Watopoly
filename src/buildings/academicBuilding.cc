@@ -66,7 +66,7 @@ void Academics::render(std::shared_ptr<Graphics> gfx) {
     }
     gfx->write("--------", coordinate.x, coordinate.y + 1, 8);
     if (owner) {
-        gfx->write(name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y + 2, 8);
+        gfx->write((mortgaged ? "'" : "") + name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y + 2, 8);
     } else {
         gfx->write(name, coordinate.x, coordinate.y + 2, 8);
     }

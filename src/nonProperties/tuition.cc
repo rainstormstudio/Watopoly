@@ -8,7 +8,7 @@ void Tuition::update(std::vector<std::shared_ptr<Player>> players, std::shared_p
     if (newPlayer) {
         newPlayer->setNeedToPayTuition(true);
         gfx->addMsg(newPlayer->getName() + " arrived at " + name + ". ");
-        gfx->addMsg("Choose to pay $300 or 10% of your total worth! ");
+        gfx->addMsg("Choose to pay $300 or 10% of your total worth! \n");
         gfx->addMsg("Type 1 for the first option, 2 for the second one.");
     }
 }

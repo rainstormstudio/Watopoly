@@ -41,7 +41,7 @@ void Gym::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<G
 
 void Gym::render(std::shared_ptr<Graphics> gfx) {
     if (owner) {
-        gfx->write(name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y, 8);
+        gfx->write((mortgaged ? "'" : "") + name + "(" + owner->getSymbol() + ")", coordinate.x, coordinate.y, 8);
     } else {
         gfx->write(name, coordinate.x, coordinate.y, 8);
     }
