@@ -132,11 +132,15 @@ void Game::auction(std::shared_ptr<Building> building) {
             }
         }
     }
-    building->setOwner(players[maxBidPlayer]);
-    players[maxBidPlayer]->decBalance(maxBid, nullptr);
-    render();
-    std::cout << "Summary of auction:" << std::endl;
-    std::cout << building->getName() << " was bought by " << players[maxBidPlayer]->getName() << " with $" << maxBid << "." << std::endl;
+    if (maxBid > 0) {
+        building->setOwner(players[maxBidPlayer]);
+        players[maxBidPlayer]->decBalance(maxBid, nullptr);
+        render();
+        std::cout << "Summary of auction:" << std::endl;
+        std::cout << building->getName() << " was bought by " << players[maxBidPlayer]->getName() << " with $" << maxBid << "." << std::endl;
+    } else {
+        std::cout << "Auction fails! No one wins the auction!" << std::endl;
+    }
 }
 
 void Game::trade() {
@@ -816,11 +820,12 @@ void Game::processInput() {
                                 if (Math::isNat(events->getArg(0)) && Math::isNat(events->getArg(1))) {
                                     unsigned int moveForward = std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
                                     unsigned int newPosition = players[currentPlayer]->getPosition() + std::stoi(events->getArg(0)) + std::stoi(events->getArg(1));
-                                    players[currentPlayer]->setPosition(newPosition);
+                                    std::cout << "move " << moveForward << std::endl;
                                     if (40-players[currentPlayer]->getPosition() < moveForward) {
                                         players[currentPlayer]->setPassOSAP(true);
                                         players[currentPlayer]->addBalance(200);
                                     }
+                                    players[currentPlayer]->setPosition(newPosition);
                                     players[currentPlayer]->setRolled(true);
                                     successInput = true;
                                 } else {
