@@ -833,6 +833,8 @@ void Game::processInput() {
                         if (players[currentPlayer]->getWillBankrupt() && !players[currentPlayer]->getBankruptcy()) {
                             std::cout << "You cannot go to next turn yet." << std::endl;
                             std::cout << "You must try to raise your balance and pay for what you owe or claim bankruptcy." << std::endl;
+                        } else if (players[currentPlayer]->rolled() == false) {
+                            std::cout << "You have not yet rolled the dice. Pleas enter roll!" << std::endl;
                         } else {
                             nextTurn();
                             successInput = true;
