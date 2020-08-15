@@ -510,14 +510,7 @@ void Game::processInput() {
                 for (unsigned int i = 0; i < data->numPlayers; ++i) {
                     players.emplace_back(std::make_shared<Player>(data->playerData[i].name, data->playerData[i].symbol));
                     players[players.size() - 1]->setPosition(data->playerData[i].position);
-                    if (data->playerData[i].position == 0) {
-                        std::shared_ptr<CollectOSAP> collectOsap = std::dynamic_pointer_cast<CollectOSAP>(squares[0]);
-                        if (collectOsap) {
-                            collectOsap->addPlayer(players[players.size() - 1]);
-                        } else {
-                            std::cerr << "Error loading data for CollectOSAP." << std::endl;
-                        }
-                    }
+                    squares[data->playerData[i].position]->addPlayer(players[players.size() - 1]);
                     players[players.size() - 1]->setBalance(data->playerData[i].money);
                     players[players.size() - 1]->setTimsCups(data->playerData[i].timsCups);
                     if (data->playerData[i].isInDCTims) {
@@ -1026,8 +1019,8 @@ void Game::processInput() {
                                 }
                                 players[currentPlayer]->getOwedPlayer()->changeAsset(
                                     players[currentPlayer]->getOwedPlayer()->getAsset() + players[currentPlayer]->getAsset());
-                                std::cout << players[currentPlayer]->getName() << "'s assets are now owned by '" 
-                                    << players[currentPlayer]->getOwedPlayer()->getName() << "'s" << std::endl;
+                                std::cout << players[currentPlayer]->getName() << "'s assets are now owned by " 
+                                    << players[currentPlayer]->getOwedPlayer()->getName() << "." << std::endl;
                             } else {
                                 for (auto& square : squares) {
                                     std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);

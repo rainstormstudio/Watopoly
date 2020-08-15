@@ -27,6 +27,8 @@ public:
 
     virtual std::string getOwnerName() = 0;
 
+    void addPlayer(std::shared_ptr<Player> initPlayer);
+
     virtual void update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) = 0;
 
     virtual void render(std::shared_ptr<Graphics> gfx) = 0;

@@ -2,7 +2,11 @@
 
 Square::Square(unsigned int square_pos, Vec2 coord, std::string name)
 	: square_pos{ square_pos }, coordinate { coord }, name{ name } {
-    
+    players.clear();
+}
+
+void Square::addPlayer(std::shared_ptr<Player> initPlayer) {
+    players.push_back(initPlayer);
 }
 
 void Square::updatePlayers(std::vector<std::shared_ptr<Player>> mplayers) {
@@ -15,6 +19,9 @@ void Square::updatePlayers(std::vector<std::shared_ptr<Player>> mplayers) {
                     newPlayer = nullptr;
                     break;
                 }
+            }
+            if (newPlayer) {
+                break;
             }
         }
     }
