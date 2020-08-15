@@ -1072,13 +1072,16 @@ void Game::update() {
                     break;
                 }
             }
-            if (players[currentPlayer]->getWillBankrupt()) {
+            if (players[currentPlayer]->getWillBankrupt() && !players[currentPlayer]->getBankruptcy()) {
                 if (players[currentPlayer]->getOwedPlayer()) {
                     gfx->addMsg("Warning! You owe " + players[currentPlayer]->getOwedPlayer()->getName() + 
                         " $" + std::to_string(players[currentPlayer]->getOwedMoney()) + ".\n");
                 } else {
                     gfx->addMsg("Warning! You owe bank $" + std::to_string(players[currentPlayer]->getOwedMoney()) + ".\n");
                 }
+            }
+            if (players[currentPlayer]->getBankruptcy()) {
+                gfx->addMsg(players[currentPlayer]->getName() + " claimed bankruptcy.\n");
             }
             break;
         }
