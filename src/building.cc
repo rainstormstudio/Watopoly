@@ -35,6 +35,10 @@ void Building::setMortgage(bool SetOrNot) {
     }
 }
 
+void Building::resetMortgage() {
+    mortgaged = false;
+}
+
 std::string Building::getOwnerName() {
     return owner->getName();
 }

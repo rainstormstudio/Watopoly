@@ -796,9 +796,10 @@ void Game::processInput() {
                     }
                 }
                 players[currentPlayer]->setNeedToPayTuition(false);
-                /*if (successInput) {
+                if (players[currentPlayer]->getWillBankrupt()) {
+                    std::cout << ("You borrowed $" + std::to_string(players[currentPlayer]->getOwedMoney()) + " from the bank and paid the tuition.\n") << std::endl;
                     return;
-                }*/
+                }
             }
             std::cout << "================================================================================" << std::endl;
             std::cout << "Now is " << players[currentPlayer]->getName() << "'s turn:" << std::endl;
@@ -1022,11 +1023,11 @@ void Game::processInput() {
                                 std::cout << players[currentPlayer]->getName() << "'s assets are now owned by " 
                                     << players[currentPlayer]->getOwedPlayer()->getName() << "." << std::endl;
                             } else {
+                                std::cout << players[currentPlayer]->getName() << "'s assets are now returned to the open market." << std::endl;
                                 for (auto& square : squares) {
                                     std::shared_ptr<Building> building = std::dynamic_pointer_cast<Building>(square);
-                                    std::cout << players[currentPlayer]->getName() << "'s assets are now returned to the open market." << std::endl;
                                     if (building && building->getOwner() == players[currentPlayer]) {
-                                        building->setMortgage(false);
+                                        building->resetMortgage();
                                         auction(building);
                                     }
                                 }

@@ -23,6 +23,8 @@ public:
 
     void setMortgage(bool SetOrNot);
 
+    void resetMortgage();
+
     std::string getOwnerName() override;
 
     void update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Graphics> gfx) override;

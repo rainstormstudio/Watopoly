@@ -124,9 +124,9 @@ void Player::addBalance(unsigned int total) {
 
 void Player::decBalance(unsigned int total, std::shared_ptr<Player> owedPlayer) {
     if (balance < total) {
-        balance = 0;
         willBankrupt = true;
         owedMoney = total - balance;
+        balance = 0;
         this->owedPlayer = owedPlayer;
     } else {
         balance -= total;
@@ -145,14 +145,18 @@ bool Player::getNeedToPayTuition() const {
 
 int Player::payTuition(std::string option) {
     if (option == "1") {
-        balance -= 300;
-        std::cout << "Successfully paid $300 tuition fees!" << std::endl;
+        decBalance(300, nullptr);
+        if (!willBankrupt) {
+            std::cout << "Successfully paid $300 tuition fees!" << std::endl;
+        }
         return 300;
     }
     if (option == "2") {
         int totalWorth = asset+balance;
-        balance -= (totalWorth*0.1);
-        std::cout << "Successfully paid $" << totalWorth*0.1 << " tuition fees!" << std::endl;
+        decBalance(static_cast<unsigned int>(totalWorth*0.1), nullptr);
+        if (!willBankrupt) {
+            std::cout << "Successfully paid $" << totalWorth*0.1 << " tuition fees!" << std::endl;
+        }
         return totalWorth*0.1;
     }
     return 0;
