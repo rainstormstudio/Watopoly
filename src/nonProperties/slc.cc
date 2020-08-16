@@ -56,6 +56,7 @@ void SLC::update(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<G
             }
         } else {
             move = getOption();
+            newPlayer->setTeleported(true);
             switch (move) {
                 case BACK_3: {
                     newPlayer->setPosition(square_pos - 3);

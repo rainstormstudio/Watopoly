@@ -29,6 +29,7 @@ class Player {
     bool collectGooseBonus = false;
     bool passOSAP=false;
     bool landOSAP=false;
+    bool teleported=false;
 
     unsigned int timsTurn;
     
@@ -95,6 +96,9 @@ public:
 
     bool getWillBankrupt() const;
     void setWillBankrupt(bool value);
+
+    bool getTeleported() const;
+    void setTeleported(bool value);
 
     std::shared_ptr<Player> getOwedPlayer() const;
     unsigned int getOwedMoney() const;

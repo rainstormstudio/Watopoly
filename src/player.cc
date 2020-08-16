@@ -217,6 +217,7 @@ void Player::buy(std::shared_ptr<Building> building) {
 void Player::gotoTims() {
     position = 10;
     timsTurn = 1;
+    teleported = true;
 }
 
 void Player::setTimsTurn(unsigned int value) {
@@ -256,3 +257,7 @@ unsigned int Player::getOwedMoney() const {
 void Player::setOwedMoney(unsigned int value) {
     owedMoney = value;
 }
+
+bool Player::getTeleported() const { return teleported; }
+
+void Player::setTeleported(bool value) { teleported = value; }

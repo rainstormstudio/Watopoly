@@ -716,11 +716,11 @@ void Game::processInput() {
             }
             if (players[currentPlayer]->getPassOSAP()) {
                 if (bank >= 200) {
-                    std::cout << "Passed by OSAP! Received $200!" << std::endl;
+                    std::cout << "(Passed by OSAP! Received $200!)" << std::endl;
                     players[currentPlayer]->addBalance(200);
                     bank -= 200;
                 } else {
-                    std::cout << "Passed by OSAP! But no OSAP fee is available now!" << std::endl;
+                    std::cout << "(Passed by OSAP! But no OSAP fee is available now!)" << std::endl;
                 }
                 players[currentPlayer]->setPassOSAP(false);
             }
@@ -1128,20 +1128,12 @@ void Game::update() {
                     dctims->update(players, gfx);
                 }
             }
-            std::shared_ptr<SLC> slc1 = std::dynamic_pointer_cast<SLC>(squares[2]);
-            std::shared_ptr<SLC> slc2 = std::dynamic_pointer_cast<SLC>(squares[17]);
-            std::shared_ptr<SLC> slc3 = std::dynamic_pointer_cast<SLC>(squares[33]);
-            SLCmove moves[3];
-            moves[0] = slc1->getMove();
-            moves[1] = slc2->getMove();
-            moves[2] = slc3->getMove();
-            for (int i = 0; i < 3; ++i) {
-                if (moves[i] != NONE) {
+            if (players[currentPlayer]->getTeleported()) {
                     for (auto& square : squares) {
                         square->update(players, gfx);
                     }
                     break;
-                }
+                    players[currentPlayer]->setTeleported(false);
             }
             if (players[currentPlayer]->getWillBankrupt() && !players[currentPlayer]->getBankruptcy()) {
                 if (players[currentPlayer]->getOwedPlayer()) {
