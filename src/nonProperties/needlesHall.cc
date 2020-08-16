@@ -39,14 +39,6 @@ void NeedlesHall::update(std::vector<std::shared_ptr<Player>> players, std::shar
     updatePlayers(players);
     if (newPlayer) {
         gfx->addMsg(newPlayer->getName() + " arrived at Needls Hall");
-        deltaMoney = getOption();
-        if (deltaMoney >= 0) {
-            newPlayer->addBalance(static_cast<unsigned int>(deltaMoney));
-            gfx->addMsg(" and gained $" + std::to_string(deltaMoney) + ". \n");
-        } else {
-            newPlayer->decBalance(static_cast<unsigned int>(-deltaMoney), nullptr);
-            gfx->addMsg(" and lost $" + std::to_string(-deltaMoney) + ". \n");
-        }
         int pick = Math::randint(1, 100);
         if (pick == 1) {
             unsigned int totalTimsCups = 0;
@@ -55,7 +47,27 @@ void NeedlesHall::update(std::vector<std::shared_ptr<Player>> players, std::shar
             }
             if (totalTimsCups < 4) {
                 newPlayer->setTimsCups(newPlayer->getTimsCups() + 1);
-                gfx->addMsg("Congratulations! You won a Roll Up the Rim cup.\n");
+                gfx->addMsg(". Congratulations! You won a Roll Up the Rim cup.\n");
+            }
+        } else {
+            deltaMoney = getOption();
+            if (deltaMoney >= 0) {
+                newPlayer->addBalance(static_cast<unsigned int>(deltaMoney));
+                gfx->addMsg(" and gained $" + std::to_string(deltaMoney) + ". \n");
+            } else {
+                newPlayer->decBalance(static_cast<unsigned int>(-deltaMoney), nullptr);
+                gfx->addMsg(" and lost $" + std::to_string(-deltaMoney) + ". \n");
+            }
+            int pick = Math::randint(1, 100);
+            if (pick == 1) {
+                unsigned int totalTimsCups = 0;
+                for (auto& player : players) {
+                    totalTimsCups += player->getTimsCups();
+                }
+                if (totalTimsCups < 4) {
+                    newPlayer->setTimsCups(newPlayer->getTimsCups() + 1);
+                    gfx->addMsg("Congratulations! You won a Roll Up the Rim cup.\n");
+                }
             }
         }
     }
